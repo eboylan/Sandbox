@@ -4,8 +4,7 @@
  */
 package entities;
 
-import states.LoseState;
-import world.FieldOfView;
+//import world.FieldOfView;
 
 /**
  *
@@ -13,7 +12,7 @@ import world.FieldOfView;
  */
 public class PlayerAI extends EntityAI {
 
-    FieldOfView fov;
+    //FieldOfView fov;
 
     public PlayerAI(BaseEntity be) {
         super(be);
