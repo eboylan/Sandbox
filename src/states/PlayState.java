@@ -41,7 +41,7 @@ public class PlayState extends BasicGameState {
     @Override
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
         tileSize = 32;
-        screenWidthTiles = 32;
+        screenWidthTiles = 32 - 9;
         screenHeightTiles = 23;
         ground = new Image("data/DungeonCrawl_ProjectUtumnoTileset.png");
         groundTiles = new SpriteSheet(ground, tileSize, tileSize);
@@ -79,19 +79,21 @@ public class PlayState extends BasicGameState {
     @Override
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
         int z = player.getPosZ();
-        //fov.update(z, player.getPosX(), player.getPosY(), player.getVisionRadius());
         groundTiles.startUse();
-        
         for (int x = xOffset; x < xOffset + screenWidthTiles; x++) {
             for (int y = yOffset; y < yOffset + screenHeightTiles; y++) {
-                groundTiles.getSubImage(world.getImageCol(z, x, y), world.getImageRow(z, x, y)).draw(x * tileSize, y * tileSize);
-                //groundTiles.getSubImage(fov.tile(z, x, y).getImageCol(), fov.tile(z, x, y).getImageRow()).draw(x * tileSize, y * tileSize);
+                groundTiles.getSubImage(world.getImageCol(z, x, y), world.getImageRow(z, x, y)).draw(x * tileSize, y * tileSize);              
                if(!player.canSee(z, x, y)) {
-                    //groundTiles.getSubImage(26, 0).draw(x * tileSize, y * tileSize);
                     groundTiles.getSubImage(4, 1).draw(x * tileSize, y * tileSize);
                 }
             }
         }
+        for (int x = xOffset + screenWidthTiles; x < xOffset + screenWidthTiles + 9; x++) {
+            for (int y = yOffset; y < yOffset + screenHeightTiles; y++) {
+                groundTiles.getSubImage(31, 17).draw(x * tileSize, y  * tileSize);                        
+            }
+        }
+        //groundTiles.getSubImage(0, 13).draw(0 + (xOffset * tileSize), 0);
         for(BaseEntity be : world.entities) {
             if(player.canSee(z, be.getPosX(), be.getPosY()) && z == be.getPosZ()) {
                 groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
@@ -99,7 +101,6 @@ public class PlayState extends BasicGameState {
             }           
         }
         groundTiles.endUse();
-
         g.drawString("   Play State", 200 + (tileSize * xOffset), 10 + (tileSize * yOffset));
         g.drawString("Press Escape to lose or Enter to win", 200 + (tileSize * xOffset), 40 + (tileSize * yOffset));
         g.drawString("Entities: " + world.entities.size(), 200 + (tileSize * xOffset), 70 + (tileSize * yOffset));

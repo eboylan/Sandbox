@@ -81,12 +81,7 @@ public class WorldBuilder {
             return this;
         }
     
-
         //basic smoothing method need to add initial gap fill/close smoooth
-    
-
-    
-
     private WorldBuilder smooth(int times) {
         Tile[][][] tiles2 = new Tile[depth][width][height];
         for (int time = 0; time < times; time++) {
@@ -120,46 +115,9 @@ public class WorldBuilder {
             }
             return this;
         }
-    
-    public WorldBuilder varyTiles() {
-        System.out.println("vary Tiles");
-        Tile[][][] tiles2 = new Tile[depth][width][height];
-        for (int z = 0; z < depth; z++) {
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
-                        if (tiles[z][x][y] == Tile.FLOOR) {
-                            double d = Math.random();
-                            System.out.println("" + d);
-                            if (d > 0.2 && d <= 0.3) {
-                                tiles2[z][x][y] = Tile.FLOOR2;
-                            } else if (d > 0.3 && d <= 0.4) {
-                                tiles2[z][x][y] = Tile.FLOOR3;
-                            } else if (d > 0.4 && d <= 0.5) {
-                                tiles2[z][x][y] = Tile.FLOOR4;
-                            } else if (d > 0.5 && d <= 0.6) {
-                                tiles2[z][x][y] = Tile.FLOOR5;
-                            } else if (d > 0.6 && d <= 0.7) {
-                                tiles2[z][x][y] = Tile.FLOOR6;
-                            } else if (d > 0.7 && d <= 0.8) {
-                                tiles2[z][x][y] = Tile.FLOOR7;
-                            } else if (d > 0.8){
-                                tiles2[z][x][y] = Tile.FLOOR8;
-                            }
-                        }
-                    }              
-                }
-                System.out.println("level done");
-            }
-        System.out.println("vary done");
-        tiles = tiles2;
-        System.out.println("copy done");
-        return this;
-    }
-
-    
-
+ 
     public WorldBuilder makeCaves() {
-        return randomizeTiles().initSmooth(2).smooth(2).varyTiles().createRegions().connectRegions();//;
+        return randomizeTiles().initSmooth(2).smooth(2).createRegions().connectRegions();//.varyTiles();
     }
 
     private WorldBuilder createRegions() {
@@ -170,7 +128,6 @@ public class WorldBuilder {
                 for (int y = 0; y < height; y++) {
                     if (tiles[z][x][y] != Tile.WALL && regions[z][x][y] == 0) {
                         int size = fillRegion(nextRegion++, z, x, y);
-
                         if (size < 25) {
                             removeRegion(nextRegion - 1, z);
                         }

@@ -10,34 +10,33 @@ package world;
  */
 
 public enum Tile {
-    FLOOR(19, 13, true),
-    FLOOR2(20, 13, true),
-    FLOOR3(21, 13, true),
-    FLOOR4(22, 13, true),
-    FLOOR5(23, 13, true),
-    FLOOR6(24, 13, true),
-    FLOOR7(25, 13, true),
-    FLOOR8(26, 13, true),
-    WALL(16, 16, false),
-    BOUNDS(0, 2, false),
-    STAIRSUP(31,15, true),
-    STAIRSDOWN(15,15, true),
-    UNKNOWN(4,1, false);
+    FLOOR(12, 17, true, 8),
+    WALL(8, 16, false, 8),
+    BOUNDS(0, 2, false, 1),
+    STAIRSUP(31,15, true, 1),
+    STAIRSDOWN(15,15, true, 1),
+    UNKNOWN(4,1, false, 1);
     
     private int imageCol;
     private int imageRow;
     private boolean isGround;
+    private int numAlts;
         
     public int getImageCol() { return imageCol; }
     public int getImageRow() { return imageRow; }
-
-    Tile(int r, int c, boolean ig) {
-        this.imageRow = c;
-        this.imageCol = r;
-        this.isGround = ig;
-    }
-    
     public boolean isGround() {
 	return isGround;
     }
+    public int getNumAlts() {
+        return numAlts;
+    }
+
+    Tile(int r, int c, boolean ig, int numAlts) {
+        this.imageRow = c;
+        this.imageCol = r;
+        this.isGround = ig;
+        this.numAlts = numAlts;
+    }
+    
+    
 }

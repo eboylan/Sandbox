@@ -58,7 +58,7 @@ public class World {
     }
 
     public int getImageCol(int z, int x, int y) {
-        return tiles[z][x][y].getImageCol();
+        return tiles[z][x][y].getImageCol() + ((x * y + z) % tiles[z][x][y].getNumAlts());
     }
 
     public int getImageRow(int z, int x, int y) {
@@ -81,7 +81,7 @@ public class World {
         do {
             x = (int) (Math.random() * getWidth());
             y = (int) (Math.random() * getHeight());
-        } while (tile(z, x, y) != Tile.FLOOR || isEntityAt(z, x, y) != null);
+        } while (tile(z, x, y).isGround() == false || isEntityAt(z, x, y) != null);
         be.setPos(z, x, y);
         entities.add(be);
     }
