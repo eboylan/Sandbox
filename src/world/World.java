@@ -96,4 +96,8 @@ public class World {
                 be.update();
             }
     }
+
+    public void putItemInClearTile(Item i, int depth) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 }

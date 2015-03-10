@@ -6,6 +6,7 @@ package states;
 
 import entities.BaseEntity;
 import entities.EntityFactory;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -93,14 +94,27 @@ public class PlayState extends BasicGameState {
                 groundTiles.getSubImage(31, 17).draw(x * tileSize, y  * tileSize);                        
             }
         }
-        //groundTiles.getSubImage(0, 13).draw(0 + (xOffset * tileSize), 0);
+        g.setColor(Color.black);
+        g.fillRect((xOffset +  24)* tileSize, (yOffset + 2)  * tileSize, 3 * tileSize, tileSize);
+        groundTiles.getSubImage(8, 1).draw((xOffset +  24)* tileSize, (yOffset + 2)  * tileSize);
+        groundTiles.getSubImage(42 + (player.getAV()/10), 0).draw((xOffset +  25)* tileSize, (yOffset + 2)  * tileSize);
+        groundTiles.getSubImage(42 + (player.getAV()%10), 0).draw((xOffset +  26)* tileSize, (yOffset + 2)  * tileSize);
+        g.fillRect((xOffset +  24)* tileSize, (yOffset + 4)  * tileSize, 3 * tileSize, tileSize);
+        groundTiles.getSubImage(5, 1).draw((xOffset +  24)* tileSize, (yOffset + 4)  * tileSize);
+        groundTiles.getSubImage(42 + (player.getDV()/10), 0).draw((xOffset +  25)* tileSize, (yOffset + 4)  * tileSize);
+        groundTiles.getSubImage(42 + (player.getDV()%10), 0).draw((xOffset +  26)* tileSize, (yOffset + 4)  * tileSize);
+        g.fillRect((xOffset +  24)* tileSize, (yOffset + 6)  * tileSize, 3 * tileSize, tileSize);
+        groundTiles.getSubImage(7, 1).draw((xOffset +  24)* tileSize, (yOffset + 6)  * tileSize);
+        groundTiles.getSubImage(42 + (player.getHP()/10), 0).draw((xOffset +  25)* tileSize, (yOffset + 6)  * tileSize);
+        groundTiles.getSubImage(42 + (player.getHP()%10), 0).draw((xOffset +  26)* tileSize, (yOffset + 6)  * tileSize);
+        
         for(BaseEntity be : world.entities) {
             if(player.canSee(z, be.getPosX(), be.getPosY()) && z == be.getPosZ()) {
                 groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
-                g.drawString("" + be.getHP(), tileSize * be.getPosX(), tileSize * be.getPosY());
             }           
         }
         groundTiles.endUse();
+        g.setColor(Color.white);
         g.drawString("   Play State", 200 + (tileSize * xOffset), 10 + (tileSize * yOffset));
         g.drawString("Press Escape to lose or Enter to win", 200 + (tileSize * xOffset), 40 + (tileSize * yOffset));
         g.drawString("Entities: " + world.entities.size(), 200 + (tileSize * xOffset), 70 + (tileSize * yOffset));
@@ -176,9 +190,13 @@ public class PlayState extends BasicGameState {
         }
     }
     
-    public int getScrollX() { return Math.max(0, Math.min(player.getPosX() - screenWidthTiles / 2, world.getWidth() - screenWidthTiles)); }
+    public int getScrollX() { 
+        return Math.max(0, Math.min(player.getPosX() - screenWidthTiles / 2, world.getWidth() - screenWidthTiles));  
+    }
 	
-    public int getScrollY() { return Math.max(0, Math.min(player.getPosY() - screenHeightTiles / 2, world.getHeight() - screenHeightTiles)); }
+    public int getScrollY() { 
+        return Math.max(0, Math.min(player.getPosY() - screenHeightTiles / 2, world.getHeight() - screenHeightTiles)); 
+    }
 
     private void createWorld() {
         world = new WorldBuilder(6, 80, 80)

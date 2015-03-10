@@ -31,9 +31,9 @@ public enum Tile {
         return numAlts;
     }
 
-    Tile(int r, int c, boolean ig, int numAlts) {
-        this.imageRow = c;
-        this.imageCol = r;
+    Tile(int c, int r, boolean ig, int numAlts) {
+        this.imageCol = c;
+        this.imageRow = r;
         this.isGround = ig;
         this.numAlts = numAlts;
     }
