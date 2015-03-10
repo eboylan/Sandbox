@@ -4,7 +4,7 @@
  */
 package world;
 
-import Inventry.Item;
+import Inventory.Item;
 import entities.BaseEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class World {
     private int height;
     private int width;
     public List<BaseEntity> entities;
-    public List<Item> worldInventry;
+    public List<Item> worldInventory;
     private boolean won = false;
 
     public int getHeight() {
@@ -49,7 +49,7 @@ public class World {
         this.width = tiles[0].length;
         this.height = tiles[0][0].length;
         this.entities = new ArrayList<>();
-        this.worldInventry = new ArrayList<>();
+        this.worldInventory = new ArrayList<>();
     }
 
     public Tile tile(int d, int c, int r) {
@@ -72,6 +72,15 @@ public class World {
         for (BaseEntity be : entities) {
             if (be.getPosZ() == z && be.getPosX() == x && be.getPosY() == y) {
                 return be;
+            }
+        }
+        return null;
+    }
+    
+    public Item isItemAt(int z, int x, int y) {
+        for (Item i : worldInventory) {
+            if (i.getPosZ() == z && i.getPosX() == x && i.getPosY() == y) {
+                return i;
             }
         }
         return null;
@@ -109,6 +118,6 @@ public class World {
             y = (int) (Math.random() * getHeight());
         } while (tile(depth, x, y).isGround() == false);
         i.setPos(depth, x, y);
-        worldInventry.add(i);
+        worldInventory.add(i);
     }
 }

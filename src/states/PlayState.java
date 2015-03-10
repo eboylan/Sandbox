@@ -4,10 +4,12 @@
  */
 package states;
 
-import Inventry.Item;
-import Inventry.ItemFactory;
+import Inventory.Item;
+import Inventory.ItemFactory;
 import entities.BaseEntity;
 import entities.EntityFactory;
+import java.util.ArrayList;
+import java.util.List;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -34,7 +36,8 @@ public class PlayState extends BasicGameState {
     int tileSize;
     int screenWidthTiles;
     int screenHeightTiles;
-    FieldOfView fov;
+    List<String> messages;
+    //FieldOfView fov;
 
     @Override
     public int getID() {
@@ -49,6 +52,10 @@ public class PlayState extends BasicGameState {
         ground = new Image("data/DungeonCrawl_ProjectUtumnoTileset.png");
         groundTiles = new SpriteSheet(ground, tileSize, tileSize);
         createWorld();
+        messages = new ArrayList<>();
+        messages.add("I'm a message box");
+        messages.add("I show messages");
+        messages.add("this is a message");
         //fov = new FieldOfView(world);
 
         
@@ -77,9 +84,14 @@ public class PlayState extends BasicGameState {
         
         ItemFactory itemFactory = new ItemFactory(world);
         for (int i = 0; i < world.getDepth(); i++) {
+            itemFactory.newLeatherArmour(i);
+            itemFactory.newLeatherArmour(i);
+            itemFactory.newLeatherArmour(i);
+            itemFactory.newLeatherArmour(i);
+            itemFactory.newLeatherArmour(i);
+            itemFactory.newLeatherArmour(i);
             if(Math.random() < i/2f) {
                 itemFactory.newLeatherArmour(i);
-                
             }
             if(Math.random() < i/5f) {
                 itemFactory.newChainArmour(i);
@@ -99,6 +111,9 @@ public class PlayState extends BasicGameState {
         groundTiles.startUse();
         for (int x = xOffset; x < xOffset + screenWidthTiles; x++) {
             for (int y = yOffset; y < yOffset + screenHeightTiles; y++) {
+                if(world.tile(z, x, y) == Tile.STAIRSUP || world.tile(z, x, y) == Tile.STAIRSDOWN) {
+                    groundTiles.getSubImage(22, 17).draw(x * tileSize, y * tileSize);    
+                }
                 groundTiles.getSubImage(world.getImageCol(z, x, y), world.getImageRow(z, x, y)).draw(x * tileSize, y * tileSize);              
                if(!player.canSee(z, x, y)) {
                     groundTiles.getSubImage(4, 1).draw(x * tileSize, y * tileSize);
@@ -124,7 +139,21 @@ public class PlayState extends BasicGameState {
         groundTiles.getSubImage(42 + (player.getHP()/10), 0).draw((xOffset +  25)* tileSize, (yOffset + 6)  * tileSize);
         groundTiles.getSubImage(42 + (player.getHP()%10), 0).draw((xOffset +  26)* tileSize, (yOffset + 6)  * tileSize);
         
-        for(Item i : world.worldInventry) {
+        g.fillRect((xOffset +  24)* tileSize, (yOffset + 8)  * tileSize, tileSize, tileSize);
+        groundTiles.getSubImage(43, 45).draw((xOffset +  24)* tileSize, (yOffset + 8)  * tileSize);
+        g.fillRect((xOffset +  25)* tileSize, (yOffset + 8)  * tileSize, 5 * tileSize, 4 * tileSize);
+        for(int y = 0; y < 4; y++){
+            for(int x = 0; x < 5; x++){
+                int i = x + (5*y);
+                if (player.getInventry().get(i) != null) {
+                    groundTiles.getSubImage(player.getInventry().get(i).getImageCol(), player.getInventry().get(i).getImageRow()).draw((xOffset +  25 + x)* tileSize, (yOffset + 8 + y)  * tileSize);
+                }
+            }
+        }
+        
+        g.fillRect((xOffset +  24)* tileSize, (yOffset + 16)  * tileSize, 7 * tileSize, 6 * tileSize);
+        
+        for(Item i : world.worldInventory) {
             if(player.canSee(z, i.getPosX(), i.getPosY()) && z == i.getPosZ()) {
                 groundTiles.getSubImage(i.getImageCol(), i.getImageRow()).draw(tileSize * i.getPosX(), tileSize * i.getPosY());
             }           
@@ -136,13 +165,14 @@ public class PlayState extends BasicGameState {
         }
         groundTiles.endUse();
         g.setColor(Color.white);
-        g.drawString("   Play State", 200 + (tileSize * xOffset), 10 + (tileSize * yOffset));
-        g.drawString("Press Escape to lose or Enter to win", 200 + (tileSize * xOffset), 40 + (tileSize * yOffset));
-        g.drawString("Entities: " + world.entities.size() + " Items: " + world.worldInventry.size(), 200 + (tileSize * xOffset), 70 + (tileSize * yOffset));
-        g.drawString("Player x : " + player.getPosX() + " y: " + player.getPosY() + " z: " + player.getPosZ() ,200 + (tileSize * xOffset), 100 + (tileSize * yOffset));
+        g.drawString("   Play State", tileSize * (24 + xOffset), (yOffset + 16)  * tileSize);
+        g.drawString("Press Escape to lose", tileSize * (24 + xOffset), (yOffset + 17)  * tileSize);
+        g.drawString("Press Enter to win", tileSize * (24 + xOffset), (yOffset + 18)  * tileSize);
+        g.drawString("Entities: " + world.entities.size() + " Items: " + world.worldInventory.size(), tileSize * (24 + xOffset), (yOffset + 19)  * tileSize);
+        g.drawString("Player x : " + player.getPosX() + " y: " + player.getPosY() + " z: " + player.getPosZ() ,tileSize * (24 + xOffset), (yOffset + 20)  * tileSize);
         for(BaseEntity be : world.entities) {
             if(be.getType() == "manticore") {
-                g.drawString("boss : " + be.getPosX() + " y: " + be.getPosY() + " z: " + be.getPosZ() ,200 + (tileSize * xOffset), 130 + (tileSize * yOffset));
+                g.drawString("boss : " + be.getPosX() + " y: " + be.getPosY() + " z: " + be.getPosZ() ,tileSize * (24 + xOffset), (yOffset + 21)  * tileSize);
             }          
         }
     }
@@ -202,6 +232,23 @@ public class PlayState extends BasicGameState {
                 player.moveBy(1, 0, 0);
             }
             world.update();
+        }
+        if (gc.getInput().isKeyPressed(Input.KEY_P)) {
+            Item pickupItem = world.isItemAt(player.getPosZ(), player.getPosX(), player.getPosY());
+            if (pickupItem != null) {
+                world.worldInventory.remove(pickupItem);
+                player.getInventry().add(pickupItem);
+                world.update();
+            }
+        }
+        if (gc.getInput().isKeyPressed(Input.KEY_D)) {
+            Item dropItem = player.getInventry().get(0);
+            if (dropItem != null && world.isItemAt(player.getPosZ(), player.getPosX(), player.getPosY()) == null) {
+                dropItem.setPos(player.getPosZ(), player.getPosX(), player.getPosY());
+                world.worldInventory.add(dropItem);
+                player.getInventry().remove(dropItem);
+                world.update();
+            }
         }
         if (player.getHP() < 1) {
             sbg.enterState(3);

@@ -13,9 +13,9 @@ public enum Tile {
     FLOOR(12, 17, true, 8),
     WALL(8, 16, false, 8),
     BOUNDS(0, 2, false, 1),
-    STAIRSUP(31,15, true, 1),
-    STAIRSDOWN(15,15, true, 1),
-    UNKNOWN(4,1, false, 1);
+    STAIRSUP(31, 15, true, 1),
+    STAIRSDOWN(15, 15, true, 1),
+    UNKNOWN(4, 1, false, 1);
     
     private int imageCol;
     private int imageRow;

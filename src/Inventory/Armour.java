@@ -1,4 +1,4 @@
-package Inventry;
+package Inventory;
 
 /*
  * To change this template, choose Tools | Templates

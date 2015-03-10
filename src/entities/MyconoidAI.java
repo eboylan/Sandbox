@@ -19,9 +19,14 @@ public class MyconoidAI extends EntityAI {
         this.spawn = spawn;
     }
 
+    /**
+     *
+     */
+    @Override
     public void onUpdate(){
-        if (spreadcount < 5 && Math.random() < 0.02 && spawn)
+        if (spreadcount < 5 && Math.random() < 0.02 && spawn) {
             spread();
+        }
     }
  
     private void spread(){
@@ -29,8 +34,9 @@ public class MyconoidAI extends EntityAI {
         int x = be.getPosX() + (int)(Math.random() * 11) - 5;
         int y = be.getPosY() + (int)(Math.random() * 11) - 5;
   
-        if (!be.canEnter(z, x, y))
+        if (!be.canEnter(z, x, y)) {
             return;
+        }
   
         BaseEntity child = entFactory.newMyconoid(false, z);
         child.setPos(z, x, y);
