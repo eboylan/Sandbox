@@ -11,10 +11,9 @@ public class Point {
         
 	
 	public Point(int z, int x, int y){
-	this.z = z;	
+            this.z = z;	
             this.x = x;
-		this.y = y;
-                
+            this.y = y;    
 	}
 	
 	@Override

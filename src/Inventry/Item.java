@@ -13,6 +13,9 @@ public class Item {
     private String name;
     private int imageCol;
     private int imageRow;
+    private int posZ;
+    private int posX;
+    private int posY;
 
     public Item(String name, int imageCol, int imageRow) {
         this.name = name;
@@ -39,5 +42,32 @@ public class Item {
      */
     public int getImageRow() {
         return imageRow;
+    }
+
+    /**
+     * @return the posX
+     */
+    public int getPosX() {
+        return posX;
+    }
+
+    /**
+     * @return the posY
+     */
+    public int getPosY() {
+        return posY;
+    }
+
+    /**
+     * @return the posZ
+     */
+    public int getPosZ() {
+        return posZ;
+    }
+    
+    public void setPos(int z, int x, int y) {
+        this.posZ = z;
+        this.posX = x;
+        this.posY = y;
     }
 }

@@ -4,6 +4,8 @@
  */
 package entities;
 
+import Inventry.Inventry;
+import Inventry.Item;
 import util.Point;
 import world.Tile;
 import world.World;
@@ -34,6 +36,8 @@ public class BaseEntity {
     private int imageRow;
     private int imageCol;
     
+    private Inventry inventry;
+    
     public BaseEntity(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) {
         this.type = type;
         this.world = w;
@@ -43,6 +47,7 @@ public class BaseEntity {
         this.defValue = dv;
         this.hitPoints = hp;
         this.visionRadius = vr;
+        this.inventry = new Inventry(20);
     }
 
     public String getType() {
@@ -165,4 +170,10 @@ public class BaseEntity {
         return world.tile(z, x, y);
     }
 
+    /**
+     * @return the inventry
+     */
+    public Inventry getInventry() {
+        return inventry;
+    }
 }

@@ -4,6 +4,8 @@
  */
 package states;
 
+import Inventry.Item;
+import Inventry.ItemFactory;
 import entities.BaseEntity;
 import entities.EntityFactory;
 import org.newdawn.slick.Color;
@@ -47,7 +49,7 @@ public class PlayState extends BasicGameState {
         ground = new Image("data/DungeonCrawl_ProjectUtumnoTileset.png");
         groundTiles = new SpriteSheet(ground, tileSize, tileSize);
         createWorld();
-        fov = new FieldOfView(world);
+        //fov = new FieldOfView(world);
 
         
         EntityFactory entFactory = new EntityFactory(world);
@@ -72,6 +74,20 @@ public class PlayState extends BasicGameState {
         }
         
         entFactory.newManticore(world.getDepth() - 1, player);
+        
+        ItemFactory itemFactory = new ItemFactory(world);
+        for (int i = 0; i < world.getDepth(); i++) {
+            if(Math.random() < i/2f) {
+                itemFactory.newLeatherArmour(i);
+                
+            }
+            if(Math.random() < i/5f) {
+                itemFactory.newChainArmour(i);
+            }
+            if(Math.random() < i/10f) {
+                itemFactory.newPlateArmour(i);
+            }
+        }
         
         xOffset = getScrollX();
         yOffset = getScrollY();
@@ -108,6 +124,11 @@ public class PlayState extends BasicGameState {
         groundTiles.getSubImage(42 + (player.getHP()/10), 0).draw((xOffset +  25)* tileSize, (yOffset + 6)  * tileSize);
         groundTiles.getSubImage(42 + (player.getHP()%10), 0).draw((xOffset +  26)* tileSize, (yOffset + 6)  * tileSize);
         
+        for(Item i : world.worldInventry) {
+            if(player.canSee(z, i.getPosX(), i.getPosY()) && z == i.getPosZ()) {
+                groundTiles.getSubImage(i.getImageCol(), i.getImageRow()).draw(tileSize * i.getPosX(), tileSize * i.getPosY());
+            }           
+        }
         for(BaseEntity be : world.entities) {
             if(player.canSee(z, be.getPosX(), be.getPosY()) && z == be.getPosZ()) {
                 groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
@@ -117,7 +138,7 @@ public class PlayState extends BasicGameState {
         g.setColor(Color.white);
         g.drawString("   Play State", 200 + (tileSize * xOffset), 10 + (tileSize * yOffset));
         g.drawString("Press Escape to lose or Enter to win", 200 + (tileSize * xOffset), 40 + (tileSize * yOffset));
-        g.drawString("Entities: " + world.entities.size(), 200 + (tileSize * xOffset), 70 + (tileSize * yOffset));
+        g.drawString("Entities: " + world.entities.size() + " Items: " + world.worldInventry.size(), 200 + (tileSize * xOffset), 70 + (tileSize * yOffset));
         g.drawString("Player x : " + player.getPosX() + " y: " + player.getPosY() + " z: " + player.getPosZ() ,200 + (tileSize * xOffset), 100 + (tileSize * yOffset));
         for(BaseEntity be : world.entities) {
             if(be.getType() == "manticore") {

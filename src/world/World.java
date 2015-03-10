@@ -4,6 +4,7 @@
  */
 package world;
 
+import Inventry.Item;
 import entities.BaseEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class World {
     private int height;
     private int width;
     public List<BaseEntity> entities;
+    public List<Item> worldInventry;
     private boolean won = false;
 
     public int getHeight() {
@@ -47,6 +49,7 @@ public class World {
         this.width = tiles[0].length;
         this.height = tiles[0][0].length;
         this.entities = new ArrayList<>();
+        this.worldInventry = new ArrayList<>();
     }
 
     public Tile tile(int d, int c, int r) {
@@ -98,6 +101,14 @@ public class World {
     }
 
     public void putItemInClearTile(Item i, int depth) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        int x;
+        int y;
+
+        do {
+            x = (int) (Math.random() * getWidth());
+            y = (int) (Math.random() * getHeight());
+        } while (tile(depth, x, y).isGround() == false);
+        i.setPos(depth, x, y);
+        worldInventry.add(i);
     }
 }
