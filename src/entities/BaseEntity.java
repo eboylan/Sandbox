@@ -6,6 +6,8 @@ package entities;
 
 import Inventory.Inventory;
 import Inventory.Item;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SpriteSheet;
 import util.Point;
 import world.Tile;
 import world.World;
@@ -101,10 +103,10 @@ public class BaseEntity {
     }
     
     public void moveBy(int z, int x, int y) {
-        BaseEntity target = world.isEntityAt(posZ + z, posX + x, posY + y);
+        BaseEntity target = getWorld().isEntityAt(posZ + z, posX + x, posY + y);
         
         if(target == null) {
-            entAI.onEnter(posZ + z, posX + x, posY + y, world.tile(posZ + z, posX + x, posY + y));
+            entAI.onEnter(posZ + z, posX + x, posY + y, getWorld().tile(posZ + z, posX + x, posY + y));
         } else {
             attack(target);
         }
@@ -122,15 +124,15 @@ public class BaseEntity {
     }
 
     public boolean canEnter(int z, int x, int y) {
-	return world.tile(z, x, y).isGround() && world.isEntityAt(z, x, y) == null;	
+	return getWorld().tile(z, x, y).isGround() && getWorld().isEntityAt(z, x, y) == null;	
     }
     
     public void modHP(int x) {
         hitPoints += x;
         
         if(hitPoints < 1) {
-            if(type == "manticore") world.setWin(true);
-            world.remove(this);
+            if(type == "manticore") getWorld().setWin(true);
+            getWorld().remove(this);
         }
     }
 
@@ -167,7 +169,7 @@ public class BaseEntity {
     }
     
     public Tile tile(int z, int x, int y) {
-        return world.tile(z, x, y);
+        return getWorld().tile(z, x, y);
     }
 
     /**
@@ -175,5 +177,16 @@ public class BaseEntity {
      */
     public Inventory getInventry() {
         return inventory;
+    }
+
+    /**
+     * @return the world
+     */
+    public World getWorld() {
+        return world;
+    }
+
+    public void playerUI(Graphics g, int z, int xOffset, int yOffset, SpriteSheet groundTiles, int tileSize, int screenWidthTiles, int screenHeightTiles) {
+        
     }
 }

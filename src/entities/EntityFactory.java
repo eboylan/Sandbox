@@ -18,7 +18,7 @@ public class EntityFactory {
     }
     
     public BaseEntity newPlayer() {
-        BaseEntity player = new BaseEntity("player", world, 4, 2, 6, 2, 12, 9);
+        BaseEntity player = new Player("player", world, 4, 2, 6, 2, 12, 9);
         world.putInClearTile(player, 0);
         new EntityAI(player);
         return player;

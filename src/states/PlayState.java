@@ -17,8 +17,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.state.BasicGameState;
-import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.*;
 import world.*;
 
 /**
@@ -120,39 +119,6 @@ public class PlayState extends BasicGameState {
                 }
             }
         }
-        for (int x = xOffset + screenWidthTiles; x < xOffset + screenWidthTiles + 9; x++) {
-            for (int y = yOffset; y < yOffset + screenHeightTiles; y++) {
-                groundTiles.getSubImage(31, 17).draw(x * tileSize, y  * tileSize);                        
-            }
-        }
-        g.setColor(Color.black);
-        g.fillRect((xOffset +  24)* tileSize, (yOffset + 2)  * tileSize, 3 * tileSize, tileSize);
-        groundTiles.getSubImage(8, 1).draw((xOffset +  24)* tileSize, (yOffset + 2)  * tileSize);
-        groundTiles.getSubImage(42 + (player.getAV()/10), 0).draw((xOffset +  25)* tileSize, (yOffset + 2)  * tileSize);
-        groundTiles.getSubImage(42 + (player.getAV()%10), 0).draw((xOffset +  26)* tileSize, (yOffset + 2)  * tileSize);
-        g.fillRect((xOffset +  24)* tileSize, (yOffset + 4)  * tileSize, 3 * tileSize, tileSize);
-        groundTiles.getSubImage(5, 1).draw((xOffset +  24)* tileSize, (yOffset + 4)  * tileSize);
-        groundTiles.getSubImage(42 + (player.getDV()/10), 0).draw((xOffset +  25)* tileSize, (yOffset + 4)  * tileSize);
-        groundTiles.getSubImage(42 + (player.getDV()%10), 0).draw((xOffset +  26)* tileSize, (yOffset + 4)  * tileSize);
-        g.fillRect((xOffset +  24)* tileSize, (yOffset + 6)  * tileSize, 3 * tileSize, tileSize);
-        groundTiles.getSubImage(7, 1).draw((xOffset +  24)* tileSize, (yOffset + 6)  * tileSize);
-        groundTiles.getSubImage(42 + (player.getHP()/10), 0).draw((xOffset +  25)* tileSize, (yOffset + 6)  * tileSize);
-        groundTiles.getSubImage(42 + (player.getHP()%10), 0).draw((xOffset +  26)* tileSize, (yOffset + 6)  * tileSize);
-        
-        g.fillRect((xOffset +  24)* tileSize, (yOffset + 8)  * tileSize, tileSize, tileSize);
-        groundTiles.getSubImage(43, 45).draw((xOffset +  24)* tileSize, (yOffset + 8)  * tileSize);
-        g.fillRect((xOffset +  25)* tileSize, (yOffset + 8)  * tileSize, 5 * tileSize, 4 * tileSize);
-        for(int y = 0; y < 4; y++){
-            for(int x = 0; x < 5; x++){
-                int i = x + (5*y);
-                if (player.getInventry().get(i) != null) {
-                    groundTiles.getSubImage(player.getInventry().get(i).getImageCol(), player.getInventry().get(i).getImageRow()).draw((xOffset +  25 + x)* tileSize, (yOffset + 8 + y)  * tileSize);
-                }
-            }
-        }
-        
-        g.fillRect((xOffset +  24)* tileSize, (yOffset + 16)  * tileSize, 7 * tileSize, 6 * tileSize);
-        
         for(Item i : world.worldInventory) {
             if(player.canSee(z, i.getPosX(), i.getPosY()) && z == i.getPosZ()) {
                 groundTiles.getSubImage(i.getImageCol(), i.getImageRow()).draw(tileSize * i.getPosX(), tileSize * i.getPosY());
@@ -163,18 +129,9 @@ public class PlayState extends BasicGameState {
                 groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
             }           
         }
+        player.playerUI(g, z, xOffset, yOffset, groundTiles, tileSize,  screenWidthTiles,  screenHeightTiles);
+        //playerUI(g);
         groundTiles.endUse();
-        g.setColor(Color.white);
-        g.drawString("   Play State", tileSize * (24 + xOffset), (yOffset + 16)  * tileSize);
-        g.drawString("Press Escape to lose", tileSize * (24 + xOffset), (yOffset + 17)  * tileSize);
-        g.drawString("Press Enter to win", tileSize * (24 + xOffset), (yOffset + 18)  * tileSize);
-        g.drawString("Entities: " + world.entities.size() + " Items: " + world.worldInventory.size(), tileSize * (24 + xOffset), (yOffset + 19)  * tileSize);
-        g.drawString("Player x : " + player.getPosX() + " y: " + player.getPosY() + " z: " + player.getPosZ() ,tileSize * (24 + xOffset), (yOffset + 20)  * tileSize);
-        for(BaseEntity be : world.entities) {
-            if(be.getType() == "manticore") {
-                g.drawString("boss : " + be.getPosX() + " y: " + be.getPosY() + " z: " + be.getPosZ() ,tileSize * (24 + xOffset), (yOffset + 21)  * tileSize);
-            }          
-        }
     }
 
     @Override
@@ -250,6 +207,12 @@ public class PlayState extends BasicGameState {
                 world.update();
             }
         }
+        if (gc.getInput().isKeyPressed(Input.KEY_I)) {
+            sbg.enterState(4);
+        }
+        if (gc.getInput().isKeyPressed(Input.KEY_M)) {
+            sbg.enterState(5);
+        }
         if (player.getHP() < 1) {
             sbg.enterState(3);
         }
@@ -271,4 +234,6 @@ public class PlayState extends BasicGameState {
                 .makeCaves()
                 .build();
     }
+    
+   
 }
