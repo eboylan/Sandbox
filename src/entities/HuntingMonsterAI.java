@@ -26,7 +26,7 @@ public class HuntingMonsterAI extends EntityAI {
             return;
         }*/
 
-        if (be.canSee(target.getPosZ(), target.getPosX(), target.getPosY())) {
+        if (be.canSeeLit(target.getPosZ(), target.getPosX(), target.getPosY())) {
             hunt(target);
         } else {
             wander();

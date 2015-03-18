@@ -11,16 +11,18 @@ package Inventory;
  */
 public class Item {
     private String name;
+    private String description;
     private int imageCol;
     private int imageRow;
     private int posZ;
     private int posX;
     private int posY;
 
-    public Item(String name, int imageCol, int imageRow) {
+    public Item(String name, int imageCol, int imageRow, String description) {
         this.name = name;
         this.imageCol = imageCol;
         this.imageRow = imageRow;
+        this.description = description;
     }
 
     /**
@@ -70,4 +72,12 @@ public class Item {
         this.posX = x;
         this.posY = y;
     }
+
+    /**
+     * @return the desription
+     */
+    public String getDesription() {
+        return description;
+    }
+
 }

@@ -12,8 +12,8 @@ package Inventory;
 public class Armour extends Item {
     private int defMod;
     
-    public Armour(String name, int imageCol, int imageRow, int defMod) {
-        super(name, imageCol, imageRow);
+    public Armour(String name, int imageCol, int imageRow, int defMod, String description) {
+        super(name, imageCol, imageRow, description);
         this.defMod = defMod;
     }
 

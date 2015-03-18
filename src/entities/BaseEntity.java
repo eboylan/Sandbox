@@ -4,8 +4,10 @@
  */
 package entities;
 
+import Inventory.Armour;
 import Inventory.Inventory;
 import Inventory.Item;
+import Inventory.Weapon;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
 import util.Point;
@@ -39,6 +41,7 @@ public class BaseEntity {
     private int imageCol;
     
     private Inventory inventory;
+    private Item[] equipment;
     
     public BaseEntity(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) {
         this.type = type;
@@ -50,6 +53,7 @@ public class BaseEntity {
         this.hitPoints = hp;
         this.visionRadius = vr;
         this.inventory = new Inventory(20);
+        this.equipment = new Item[3];
     }
 
     public String getType() {
@@ -140,14 +144,28 @@ public class BaseEntity {
      * @return the attValue
      */
     public int getAV() {
-        return attValue;
+        Weapon wpn = (Weapon)equipment[1];
+        int av = attValue;
+        if (wpn != null) {
+            av += wpn.getAttMod();
+        }
+        return av;
     }
 
     /**
      * @return the defValue
      */
     public int getDV() {
-        return defValue;
+        Armour arm = (Armour)equipment[0];
+        int dv = defValue;
+        if (arm != null) {
+            dv += arm.getDefMod();
+        }
+        Item oh = equipment[2];
+        if (oh != null && "Shield".equals(oh.getName())) {
+            dv++;
+        }
+        return dv;
     }
 
     /**
@@ -164,8 +182,12 @@ public class BaseEntity {
         return visionRadius;
     }
     
-    public boolean canSee(int z, int x, int y) {
-        return entAI.canSee(z, x, y);
+    public boolean canSeeDim(int z, int x, int y) {
+        return entAI.canSeeDim(z, x, y);
+    }
+    
+    public boolean canSeeLit(int z, int x, int y) {
+        return entAI.canSeeLit(z, x, y);
     }
     
     public Tile tile(int z, int x, int y) {
@@ -188,5 +210,45 @@ public class BaseEntity {
 
     public void playerUI(Graphics g, int z, int xOffset, int yOffset, SpriteSheet groundTiles, int tileSize, int screenWidthTiles, int screenHeightTiles) {
         
+    }
+
+    /**
+     * @return the equipedArmour
+     */
+    public Item getEquipment(int i) {
+        return equipment[i];
+    }
+    
+    
+
+    /**
+     * @param equipedArmour the equipedArmour to set
+     */
+    public void setEquipedArmour(Armour equipedArmour) {
+        this.equipment[0] = equipedArmour;
+    }
+    
+    public void setEquipedWeapon(Weapon equipedWeapon) {
+        this.equipment[1] = equipedWeapon;
+    }
+    
+    public void setOffHand(Item offHand) {
+        this.equipment[2] = offHand;
+    }
+
+    public void setSelectX(int i) {
+        //leave for player
+    }
+
+    public void setSelectY(int i) {
+        //leave for player
+    }
+
+    public void drop() {
+        //leave for player
+    }
+
+    public void equip() {
+       //leave for player
     }
 }

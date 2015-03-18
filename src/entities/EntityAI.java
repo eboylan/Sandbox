@@ -34,8 +34,22 @@ public class EntityAI {
         //do something
     }
 
-    public boolean canSee(int z, int x, int y) {
+    public boolean canSeeDim(int z, int x, int y) {
         if (z != be.getPosZ() || (be.getPosX() - x) * (be.getPosX() - x) + (be.getPosY() - y) * (be.getPosY() - y) > be.getVisionRadius() * be.getVisionRadius()) {          
+            return false;
+        }
+        Line line = new Line(be.getPosX(), be.getPosY(), x, y);
+        for (Iterator it = line.iterator(); it.hasNext();) {
+            Point p = (Point) it.next();
+            if (be.tile(z, p.x, p.y).isGround() || p.x == x && p.y == y)
+                continue;
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean canSeeLit(int z, int x, int y) {
+        if (z != be.getPosZ() || (be.getPosX() - x) * (be.getPosX() - x) + (be.getPosY() - y) * (be.getPosY() - y) > be.getVisionRadius()/2 * be.getVisionRadius()/2) {          
             return false;
         }
         Line line = new Line(be.getPosX(), be.getPosY(), x, y);

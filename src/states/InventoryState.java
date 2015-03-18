@@ -5,6 +5,7 @@
 package states;
 
 import entities.BaseEntity;
+import entities.Player;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -18,7 +19,6 @@ import org.newdawn.slick.state.StateBasedGame;
  * @author Emmet
  */
 public class InventoryState extends BasicGameState {
-    
 
     @Override
     public int getID() {

@@ -11,8 +11,8 @@ package Inventory;
 public class Weapon extends Item {
     private int attMod;
     
-    public Weapon(String name, int imageCol, int imageRow, int attMod) {
-        super(name, imageCol, imageRow);
+    public Weapon(String name, int imageCol, int imageRow, int attMod, String description) {
+        super(name, imageCol, imageRow, description);
         this.attMod = attMod;
     }
 
