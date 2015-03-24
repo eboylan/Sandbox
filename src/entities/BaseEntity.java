@@ -8,6 +8,7 @@ import Inventory.Armour;
 import Inventory.Inventory;
 import Inventory.Item;
 import Inventory.Weapon;
+import entityStates.*;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
 import util.Point;
@@ -18,7 +19,7 @@ import world.World;
  *
  * @author Emmet
  */
-public class BaseEntity {
+public class BaseEntity implements entityState {
     //name
     private String type;
     
@@ -42,6 +43,8 @@ public class BaseEntity {
     
     private Inventory inventory;
     private Item[] equipment;
+    private entityState entState;
+    
     
     public BaseEntity(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) {
         this.type = type;
@@ -54,6 +57,7 @@ public class BaseEntity {
         this.visionRadius = vr;
         this.inventory = new Inventory(20);
         this.equipment = new Item[3];
+        this.entState = new idleState();
     }
 
     public String getType() {
@@ -250,5 +254,10 @@ public class BaseEntity {
 
     public void equip() {
        //leave for player
+    }
+
+    @Override
+    public void render() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package states;
+package gameStates;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -15,11 +15,11 @@ import org.newdawn.slick.state.StateBasedGame;
  *
  * @author Emmet
  */
-public class MapState  extends BasicGameState {
+public class WinState  extends BasicGameState {
 
     @Override
     public int getID() {
-        return 5;
+        return 2;
     }
 
     @Override
@@ -29,14 +29,17 @@ public class MapState  extends BasicGameState {
 
     @Override
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-        g.drawString("Map", 200, 200);
-        g.drawString("Press Enter to return to Play State", 200, 230);
+        g.drawString("   You Won ", 200, 200);
+        g.drawString("Press Enter to return to start or Escape to exit", 200, 230);
     }
 
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int i) throws SlickException {
         if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
-            sbg.enterState(1);
+            sbg.enterState(0);
+        }
+        if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
+            System.exit(0);
         }
     }
     

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package states;
+package gameStates;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -15,11 +15,11 @@ import org.newdawn.slick.state.StateBasedGame;
  *
  * @author Emmet
  */
-public class WinState  extends BasicGameState {
+public class LoseState  extends BasicGameState {
 
     @Override
     public int getID() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class WinState  extends BasicGameState {
 
     @Override
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-        g.drawString("   You Won ", 200, 200);
+        g.drawString("   You Lost ", 200, 200);
         g.drawString("Press Enter to return to start or Escape to exit", 200, 230);
     }
 

@@ -1,12 +1,15 @@
 package simpleslickgame;
 
+import gameStates.WinState;
+import gameStates.PlayState;
+import gameStates.LoseState;
+import gameStates.StartState;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import states.*;
 
 public class SimpleSlickGame extends StateBasedGame
 {
@@ -36,7 +39,5 @@ public class SimpleSlickGame extends StateBasedGame
         this.addState(new PlayState());
         this.addState(new WinState());
         this.addState(new LoseState());
-        this.addState(new InventoryState());
-        this.addState(new MapState());
     }
 }
