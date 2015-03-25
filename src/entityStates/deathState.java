@@ -9,5 +9,10 @@ package entityStates;
  * @author Emmet
  */
 public class deathState implements entityState {
+
+    @Override
+    public void render() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
 }

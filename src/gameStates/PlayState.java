@@ -4,11 +4,11 @@
  */
 package gameStates;
 
-import Inventory.Armour;
-import Inventory.Icon;
-import Inventory.Item;
-import Inventory.ItemFactory;
-import Inventory.Weapon;
+import inventory.Armour;
+import inventory.Icon;
+import inventory.Item;
+import inventory.ItemFactory;
+import inventory.Weapon;
 import entities.BaseEntity;
 import entities.EntityFactory;
 import java.util.List;
@@ -39,18 +39,11 @@ public class PlayState extends BasicGameState {
     int screenWidthTiles;
     int screenHeightTiles;
     boolean showInfo;
-    int stopRunFrame;
+
 
     
     List<String> messages;
-    private SpriteSheet runSheet;
-    private Animation run;
-    private SpriteSheet att1Sheet;
-    private SpriteSheet att2Sheet;
-    private SpriteSheet att3Sheet;
-    private Animation att1;
-    private Animation att2;
-    private Animation att3;
+    
     
     //FieldOfView fov;
 
@@ -64,17 +57,10 @@ public class PlayState extends BasicGameState {
         tileSize = 32;
         screenWidthTiles = 32 - 9;
         screenHeightTiles = 23;
-        stopRunFrame = 0;
+        //stopRunFrame = 0;
         
         ground = new Image("data/DungeonCrawl_ProjectUtumnoTileset.png");
-        runSheet = new SpriteSheet("data/HeroRun.png", 140, 140);
-        att1Sheet = new SpriteSheet("data/HeroAttackA.png", 140, 140);
-        att2Sheet = new SpriteSheet("data/HeroAttackB.png", 140, 140);
-        att3Sheet = new SpriteSheet("data/HeroAttackC.png", 140, 140);
-        run = new Animation(runSheet, 90);
-        att1 = new Animation(att1Sheet, 90);
-        att2 = new Animation(att2Sheet, 90);
-        att3 = new Animation(att3Sheet, 90);
+        
         groundTiles = new SpriteSheet(ground, tileSize, tileSize);
         createWorld();
         showInfo = true;
@@ -198,6 +184,7 @@ public class PlayState extends BasicGameState {
         for (BaseEntity be : world.entities) {
             if (player.canSeeLit(z, be.getPosX(), be.getPosY()) && z == be.getPosZ()) {
                 groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
+                be.render();
             }
         }
         player.playerUI(g, z, xOffset, yOffset, groundTiles, tileSize, screenWidthTiles, screenHeightTiles);
@@ -218,14 +205,7 @@ public class PlayState extends BasicGameState {
             renderInfo(g);
         }
         
-        run.stopAt(stopRunFrame);
-        run.draw(tileSize * player.getPosX() - (70 - 16), tileSize * player.getPosY() - (70 + 32));
-        att1.stopAt(stopRunFrame);
-        att1.draw(tileSize * (player.getPosX() + 1) - (70 - 16), tileSize * player.getPosY() - (70 + 32));
-        att2.stopAt(stopRunFrame);
-        att2.draw(tileSize * (player.getPosX() + 2) - (70 - 16), tileSize * player.getPosY() - (70 + 32));
-        att3.stopAt(stopRunFrame);
-        att3.draw(tileSize * (player.getPosX() + 3) - (70 - 16), tileSize * player.getPosY() - (70 + 32));
+        
         
         
         groundTiles.endUse();
@@ -254,113 +234,41 @@ public class PlayState extends BasicGameState {
         if(gc.getInput().isKeyPressed(Input.KEY_NUMPAD6)) {
             player.moveBy(0, 1, 0);
             xOffset = getScrollX();
-            run.setCurrentFrame(45);
-            run.start();
-            att1.setCurrentFrame(45);
-            att1.start();
-            att2.setCurrentFrame(45);
-            att2.start();
-            att3.setCurrentFrame(45);
-            att3.start();
-            stopRunFrame = 59;
             world.update();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD4)) {
             player.moveBy(0, -1, 0);
             xOffset = getScrollX();
-            run.setCurrentFrame(105);
-            run.start();
-            att1.setCurrentFrame(105);
-            att1.start();
-            att2.setCurrentFrame(105);
-            att2.start();
-            att3.setCurrentFrame(105);
-            att3.start();
-            stopRunFrame = 119;
             world.update();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD8)) {
             player.moveBy(0, 0, -1);
             yOffset = getScrollY();
-            run.setCurrentFrame(75);
-            run.start();
-            att1.setCurrentFrame(75);
-            att1.start();
-            att2.setCurrentFrame(75);
-            att2.start();
-            att3.setCurrentFrame(75);
-            att3.start();
-            stopRunFrame = 89;
             world.update();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD2)) {
             player.moveBy(0, 0, 1);
             yOffset = getScrollY();
-            run.setCurrentFrame(15);
-            run.start();
-            att1.setCurrentFrame(15);
-            att1.start();
-            att2.setCurrentFrame(15);
-            att2.start();
-            att3.setCurrentFrame(15);
-            att3.start();
-            stopRunFrame = 29;
             world.update();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD9)) {
             player.moveBy(0, 1, -1);
             xOffset = getScrollX();
-            run.setCurrentFrame(60);
-            run.start();
-            att1.setCurrentFrame(60);
-            att1.start();
-            att2.setCurrentFrame(60);
-            att2.start();
-            att3.setCurrentFrame(60);
-            att3.start();
-            stopRunFrame = 74;
             world.update();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD7)) {
             player.moveBy(0, -1, -1);
             xOffset = getScrollX();
-            run.setCurrentFrame(90);
-            run.start();
-            att1.setCurrentFrame(90);
-            att1.start();
-            att2.setCurrentFrame(90);
-            att2.start();
-            att3.setCurrentFrame(90);
-            att3.start();
-            stopRunFrame = 104;
             world.update();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD1)) {
             player.moveBy(0, -1, 1);
             xOffset = getScrollX();
-            run.setCurrentFrame(0);
-            run.start();
-            att1.setCurrentFrame(0);
-            att1.start();
-            att2.setCurrentFrame(0);
-            att2.start();
-            att3.setCurrentFrame(0);
-            att3.start();
-            stopRunFrame = 14;
             world.update();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD3)) {
             player.moveBy(0, 1, 1);
             xOffset = getScrollX();
-            run.setCurrentFrame(30);
-            run.start();
-            att1.setCurrentFrame(30);
-            att1.start();
-            att2.setCurrentFrame(30);
-            att2.start();
-            att3.setCurrentFrame(30);
-            att3.start();
-            stopRunFrame = 44;
             world.update();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD5)) {

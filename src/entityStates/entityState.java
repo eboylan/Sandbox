@@ -9,5 +9,7 @@ package entityStates;
  * @author Emmet
  */
 public interface entityState {
+    
+    
     public void render();
 }

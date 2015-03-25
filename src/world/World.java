@@ -4,7 +4,7 @@
  */
 package world;
 
-import Inventory.Item;
+import inventory.Item;
 import entities.BaseEntity;
 import java.util.ArrayList;
 import java.util.List;

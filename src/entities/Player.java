@@ -4,12 +4,13 @@
  */
 package entities;
 
-import Inventory.Armour;
-import Inventory.Icon;
-import Inventory.Item;
-import Inventory.Weapon;
+import inventory.Armour;
+import inventory.Icon;
+import inventory.Item;
+import inventory.Weapon;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import world.World;
 
@@ -22,7 +23,7 @@ public class Player extends BaseEntity {
     private int selectX;
     private int selectY;
 
-    public Player(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) {
+    public Player(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) throws SlickException {
         super(type, w, ic, ir, av, dv, hp, vr);
         selectX = 0;
         selectY = 0;

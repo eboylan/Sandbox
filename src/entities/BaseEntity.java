@@ -4,12 +4,16 @@
  */
 package entities;
 
-import Inventory.Armour;
-import Inventory.Inventory;
-import Inventory.Item;
-import Inventory.Weapon;
+import inventory.Armour;
+import inventory.Inventory;
+import inventory.Item;
+import inventory.Weapon;
 import entityStates.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import util.Point;
 import world.Tile;
@@ -37,6 +41,8 @@ public class BaseEntity implements entityState {
     private int hitPoints;
     private int visionRadius;
     
+    private static final int tileSize = 32;
+    
     //placeholder static graphics, swap later for animations
     private int imageRow;
     private int imageCol;
@@ -45,8 +51,21 @@ public class BaseEntity implements entityState {
     private Item[] equipment;
     private entityState entState;
     
+    private SpriteSheet runSheet;
+    private Animation run;
+    private SpriteSheet att1Sheet;
+    private SpriteSheet att2Sheet;
+    private SpriteSheet att3Sheet;
+    private Animation att1;
+    private Animation att2;
+    private Animation att3;
+    //private int stopRunFrame;
+    private int facing;
+    private final SpriteSheet idleSheet;
+    private final Animation idle;
     
-    public BaseEntity(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) {
+    
+    public BaseEntity(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) throws SlickException {
         this.type = type;
         this.world = w;
         this.imageCol = ic;
@@ -57,7 +76,20 @@ public class BaseEntity implements entityState {
         this.visionRadius = vr;
         this.inventory = new Inventory(20);
         this.equipment = new Item[3];
-        this.entState = new idleState();
+        
+        runSheet = new SpriteSheet("data/Hero/HeroRun.png", 140, 140);
+        att1Sheet = new SpriteSheet("data/Hero/HeroAttackA.png", 140, 140);
+        att2Sheet = new SpriteSheet("data/Hero/HeroAttackB.png", 140, 140);
+        att3Sheet = new SpriteSheet("data/Hero/HeroAttackC.png", 140, 140);
+        idleSheet = new SpriteSheet("data/Hero/HeroFidget.png", 140, 140);
+        run = new Animation(runSheet, 90);
+        att1 = new Animation(att1Sheet, 90);
+        att2 = new Animation(att2Sheet, 90);
+        att3 = new Animation(att3Sheet, 90);
+        idle = new Animation(idleSheet, 90);
+        
+        this.entState = new idleState(this, idle, 29);
+        //stopRunFrame = 14;
     }
 
     public String getType() {
@@ -115,8 +147,10 @@ public class BaseEntity implements entityState {
         
         if(target == null) {
             entAI.onEnter(posZ + z, posX + x, posY + y, getWorld().tile(posZ + z, posX + x, posY + y));
+            setMove();
         } else {
             attack(target);
+            setAttack();
         }
     }
     
@@ -258,6 +292,21 @@ public class BaseEntity implements entityState {
 
     @Override
     public void render() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        entState.render();
+        //run.stopAt(stopRunFrame);
+        //run.draw(tileSize * this.getPosX() - (70 - 16), tileSize * this.getPosY() - (70 + 32));
+    }
+
+
+    public void setIdle() {
+        entState = new idleState(this, idle, 29);
+    }
+
+    private void setMove() {
+        entState = new moveState(this, run, 14);
+    }
+
+    private void setAttack() {
+        entState = new moveState(this, att1, 14);
     }
 }

@@ -4,6 +4,10 @@
  */
 package entities;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.newdawn.slick.SlickException;
+
 /**
  *
  * @author Emmet
@@ -25,11 +29,15 @@ public class MyconoidAI extends EntityAI {
     @Override
     public void onUpdate(){
         if (spreadcount < 5 && Math.random() < 0.02 && spawn) {
-            spread();
+            try {
+                spread();
+            } catch (SlickException ex) {
+                Logger.getLogger(MyconoidAI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
  
-    private void spread(){
+    private void spread() throws SlickException{
         int z = be.getPosZ();
         int x = be.getPosX() + (int)(Math.random() * 11) - 5;
         int y = be.getPosY() + (int)(Math.random() * 11) - 5;

@@ -1,8 +1,8 @@
-package Inventory;
+package inventory;
 
 
-import Inventory.Armour;
-import Inventory.Weapon;
+import inventory.Armour;
+import inventory.Weapon;
 import world.World;
 
 /*
