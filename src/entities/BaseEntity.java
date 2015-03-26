@@ -4,13 +4,11 @@
  */
 package entities;
 
-import inventory.Armour;
 import inventory.Inventory;
 import inventory.Item;
 import inventory.Weapon;
 import entityStates.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import inventory.Armour;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -88,7 +86,9 @@ public class BaseEntity implements entityState {
         att3 = new Animation(att3Sheet, 90);
         idle = new Animation(idleSheet, 90);
         
-        this.entState = new idleState(this, idle, 29);
+        facing = 1;
+        
+        this.entState = new idleState(this, idle, 30);
         //stopRunFrame = 14;
     }
 
@@ -144,7 +144,39 @@ public class BaseEntity implements entityState {
     
     public void moveBy(int z, int x, int y) {
         BaseEntity target = getWorld().isEntityAt(posZ + z, posX + x, posY + y);
+        if (x < 0 && y < 0) {
+            setFacing(6);
+        }
         
+        else if (x > 0 && y < 0) {
+            setFacing(4);  
+        }
+        
+        else if (x < 0 && y == 0) {
+            setFacing(7);
+        }
+        
+        else if (x > 0 && y == 0) {
+            setFacing(3);
+        }
+        
+        else if (x < 0 && y > 0) {
+            setFacing(0);
+        }
+        
+        else if (x > 0 && y > 0) {
+            setFacing(2);
+        }
+        
+        else if (x == 0 && y > 0) {
+            setFacing(1);
+        }
+        
+        else if (x == 0 && y < 0) {
+            setFacing(5);
+        }
+        
+            
         if(target == null) {
             entAI.onEnter(posZ + z, posX + x, posY + y, getWorld().tile(posZ + z, posX + x, posY + y));
             setMove();
@@ -292,21 +324,64 @@ public class BaseEntity implements entityState {
 
     @Override
     public void render() {
-        entState.render();
+        getEntState().render();
         //run.stopAt(stopRunFrame);
         //run.draw(tileSize * this.getPosX() - (70 - 16), tileSize * this.getPosY() - (70 + 32));
     }
 
 
     public void setIdle() {
-        entState = new idleState(this, idle, 29);
+        setEntState(new idleState(this, idle, 30));
     }
 
     private void setMove() {
-        entState = new moveState(this, run, 14);
+        setEntState(new moveState(this, run, 15));
     }
 
     private void setAttack() {
-        entState = new moveState(this, att1, 14);
+        int x = (int)Math.random() * 3;
+        if (x == 0) {
+            setEntState(new moveState(this, att1, 15));
+        } else if (x == 1) {
+            setEntState(new moveState(this, att2, 15));
+        } else {
+            setEntState(new moveState(this, att3, 15));
+        }
+    }
+
+    /**
+     * @return the facing
+     */
+    public int getFacing() {
+        return facing;
+    }
+
+    /**
+     * @param facing the facing to set
+     */
+    public void setFacing(int facing) {
+        this.facing = facing;
+    }
+
+    /**
+     * @return the entState
+     */
+    public entityState getEntState() {
+        return entState;
+    }
+
+    /**
+     * @param entState the entState to set
+     */
+    public void setEntState(entityState entState) {
+        this.entState = entState;
+    }
+    
+    public boolean isIdle() {
+        return getEntState().isIdle();
+    }
+    
+    public void stopAnim() {
+        getEntState().stopAnim();
     }
 }

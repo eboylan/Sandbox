@@ -14,5 +14,15 @@ public class deathState implements entityState {
     public void render() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public boolean isIdle() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void stopAnim() {
+        //a.stopAnim();
+    }
     
 }

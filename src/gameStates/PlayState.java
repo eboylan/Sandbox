@@ -11,6 +11,7 @@ import inventory.ItemFactory;
 import inventory.Weapon;
 import entities.BaseEntity;
 import entities.EntityFactory;
+import entityStates.idleState;
 import java.util.List;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
@@ -231,45 +232,49 @@ public class PlayState extends BasicGameState {
         if (gc.getInput().isKeyPressed(Input.KEY_DOWN)) {
             player.setSelectY(1);
         }
-        if(gc.getInput().isKeyPressed(Input.KEY_NUMPAD6)) {
-            player.moveBy(0, 1, 0);
-            xOffset = getScrollX();
-            world.update();
-        }
-        if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD4)) {
-            player.moveBy(0, -1, 0);
-            xOffset = getScrollX();
-            world.update();
-        }
-        if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD8)) {
-            player.moveBy(0, 0, -1);
-            yOffset = getScrollY();
-            world.update();
-        }
-        if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD2)) {
-            player.moveBy(0, 0, 1);
-            yOffset = getScrollY();
-            world.update();
-        }
-        if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD9)) {
-            player.moveBy(0, 1, -1);
-            xOffset = getScrollX();
-            world.update();
-        }
-        if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD7)) {
-            player.moveBy(0, -1, -1);
-            xOffset = getScrollX();
-            world.update();
-        }
-        if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD1)) {
-            player.moveBy(0, -1, 1);
-            xOffset = getScrollX();
-            world.update();
-        }
-        if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD3)) {
-            player.moveBy(0, 1, 1);
-            xOffset = getScrollX();
-            world.update();
+        
+        if (player.isIdle()) {
+            player.stopAnim();
+            if(gc.getInput().isKeyPressed(Input.KEY_NUMPAD6)) {
+                player.moveBy(0, 1, 0);
+                xOffset = getScrollX();
+                world.update();
+            }
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD4)) {
+                player.moveBy(0, -1, 0);
+                xOffset = getScrollX();
+                world.update();
+            }
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD8)) {
+                player.moveBy(0, 0, -1);
+                yOffset = getScrollY();
+                world.update();
+            }
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD2)) {
+                player.moveBy(0, 0, 1);
+                yOffset = getScrollY();
+                world.update();
+            }
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD9)) {
+                player.moveBy(0, 1, -1);
+                xOffset = getScrollX();
+                world.update();
+            }
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD7)) {
+                player.moveBy(0, -1, -1);
+                xOffset = getScrollX();
+                world.update();
+            }
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD1)) {
+                player.moveBy(0, -1, 1);
+                xOffset = getScrollX();
+                world.update();
+            }
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD3)) {
+                player.moveBy(0, 1, 1);
+                xOffset = getScrollX();
+                world.update();
+            }
         }
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD5)) {
             if (world.tile(player.getPosZ(), player.getPosX(), player.getPosY()) == Tile.STAIRSUP) {

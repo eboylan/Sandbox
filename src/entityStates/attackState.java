@@ -16,21 +16,32 @@ public class attackState implements entityState {
     Animation a;
     int i;        
     private final BaseEntity be;
+    int stopFrame;
 
     public attackState(BaseEntity be, Animation a, int i) {
         this.be = be;
         this.a = a;
         this.i = i;
-        a.setCurrentFrame(0);
+        a.setCurrentFrame(be.getFacing() * i);
+        stopFrame = (be.getFacing() + 1) * i - 1;
     }
 
     @Override
     public void render() {
-        a.stopAt(i);
+        a.stopAt(stopFrame);
         a.draw(32 * be.getPosX() - (70 - 16), 32 * be.getPosY() - (70 - 8));
-        if (i == a.getFrameCount()) {
+        if (stopFrame == a.getFrameCount()) {
             be.setIdle();
         }
+    }
+    
+    public boolean isIdle() {
+        return false;
+    }
+
+    @Override
+    public void stopAnim() {
+        a.stop();
     }
     
 }

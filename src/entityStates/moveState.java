@@ -15,22 +15,34 @@ public class moveState implements entityState {
     Animation a;
     int i;        
     private final BaseEntity be;
+    int stopFrame;
 
     public moveState(BaseEntity be, Animation a, int i) {
        this.be = be;
        this.a = a;
        this.i = i; 
-       a.setCurrentFrame(0);
+       a.setCurrentFrame(be.getFacing() * i);
+       stopFrame = (be.getFacing() + 1) * i - 1;
        a.start();
     }
 
     @Override
     public void render() {
-        a.stopAt(i);
-        a.draw(32 * be.getPosX() - (70 - 16), 32 * be.getPosY() - (70 - 8));
-        if (i == a.getFrameCount()) {
+        a.stopAt(stopFrame);
+        a.draw(32 * be.getPosX() - (70 - 16), 32 * be.getPosY() - (70 + 32));
+        if (a.isStopped()) {//stopFrame == a.getFrameCount()) {
             be.setIdle();
         }
+        
+    }
+    
+    public boolean isIdle() {
+        return false;
+    }
+
+    @Override
+    public void stopAnim() {
+        a.stop();
     }
     
 }

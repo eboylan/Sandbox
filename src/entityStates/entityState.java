@@ -12,4 +12,8 @@ public interface entityState {
     
     
     public void render();
+    
+    public boolean isIdle();
+
+    public void stopAnim();
 }
