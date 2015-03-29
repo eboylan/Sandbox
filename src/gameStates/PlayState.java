@@ -185,7 +185,9 @@ public class PlayState extends BasicGameState {
         for (BaseEntity be : world.entities) {
             if (player.canSeeLit(z, be.getPosX(), be.getPosY()) && z == be.getPosZ()) {
                 groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
-                be.render();
+                if (be.getType().equals("player") || be.getType().equals("goblin")) {
+                    be.render();
+                }
             }
         }
         player.playerUI(g, z, xOffset, yOffset, groundTiles, tileSize, screenWidthTiles, screenHeightTiles);
@@ -234,43 +236,51 @@ public class PlayState extends BasicGameState {
         }
         
         if (player.isIdle()) {
-            player.stopAnim();
-            if(gc.getInput().isKeyPressed(Input.KEY_NUMPAD6)) {
+            
+            if(gc.getInput().isKeyDown(Input.KEY_NUMPAD6)) {
+                player.stopAnim();
                 player.moveBy(0, 1, 0);
                 xOffset = getScrollX();
                 world.update();
             }
-            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD4)) {
+            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD4)) {
+                player.stopAnim();
                 player.moveBy(0, -1, 0);
                 xOffset = getScrollX();
                 world.update();
             }
-            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD8)) {
+            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD8)) {
+                player.stopAnim();
                 player.moveBy(0, 0, -1);
                 yOffset = getScrollY();
                 world.update();
             }
-            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD2)) {
+            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD2)) {
+                player.stopAnim();
                 player.moveBy(0, 0, 1);
                 yOffset = getScrollY();
                 world.update();
             }
-            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD9)) {
+            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD9)) {
+                player.stopAnim();
                 player.moveBy(0, 1, -1);
                 xOffset = getScrollX();
                 world.update();
             }
-            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD7)) {
+            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD7)) {
+                player.stopAnim();
                 player.moveBy(0, -1, -1);
                 xOffset = getScrollX();
                 world.update();
             }
-            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD1)) {
+            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD1)) {
+                player.stopAnim();
                 player.moveBy(0, -1, 1);
                 xOffset = getScrollX();
                 world.update();
             }
-            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD3)) {
+            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD3)) {
+                player.stopAnim();
                 player.moveBy(0, 1, 1);
                 xOffset = getScrollX();
                 world.update();

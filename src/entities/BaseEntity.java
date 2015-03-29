@@ -75,20 +75,37 @@ public class BaseEntity implements entityState {
         this.inventory = new Inventory(20);
         this.equipment = new Item[3];
         
-        runSheet = new SpriteSheet("data/Hero/HeroRun.png", 140, 140);
-        att1Sheet = new SpriteSheet("data/Hero/HeroAttackA.png", 140, 140);
-        att2Sheet = new SpriteSheet("data/Hero/HeroAttackB.png", 140, 140);
-        att3Sheet = new SpriteSheet("data/Hero/HeroAttackC.png", 140, 140);
-        idleSheet = new SpriteSheet("data/Hero/HeroFidget.png", 140, 140);
-        run = new Animation(runSheet, 90);
-        att1 = new Animation(att1Sheet, 90);
-        att2 = new Animation(att2Sheet, 90);
-        att3 = new Animation(att3Sheet, 90);
-        idle = new Animation(idleSheet, 90);
-        
         facing = 1;
         
-        this.entState = new idleState(this, idle, 30);
+        if(type.equals("player")){
+            runSheet = new SpriteSheet("data/Hero/HeroRun.png", 140, 140);
+            att1Sheet = new SpriteSheet("data/Hero/HeroAttackA.png", 140, 140);
+            att2Sheet = new SpriteSheet("data/Hero/HeroAttackB.png", 140, 140);
+            att3Sheet = new SpriteSheet("data/Hero/HeroAttackC.png", 140, 140);
+            idleSheet = new SpriteSheet("data/Hero/HeroFidget.png", 140, 140);
+            run = new Animation(runSheet, 90);
+            att1 = new Animation(att1Sheet, 90);
+            att2 = new Animation(att2Sheet, 90);
+            att3 = new Animation(att3Sheet, 90);
+            idle = new Animation(idleSheet, 90);
+            this.entState = new idleState(this, idle, 30);
+        } else {
+            runSheet = new SpriteSheet("data/Goblin/GoblinRun.png", 120, 120);
+            att1Sheet = new SpriteSheet("data/Goblin/GoblinAttack.png", 120, 120);
+            att2Sheet = new SpriteSheet("data/Goblin/GoblinAttack.png", 120, 120);
+            att3Sheet = new SpriteSheet("data/Goblin/GoblinAttack.png", 120, 120);
+            idleSheet = new SpriteSheet("data/Goblin/GoblinFidget.png", 120, 120);
+            run = new Animation(runSheet, 90);
+            att1 = new Animation(att1Sheet, 90);
+            att2 = new Animation(att2Sheet, 90);
+            att3 = new Animation(att3Sheet, 90);
+            idle = new Animation(idleSheet, 90);
+             this.entState = new idleState(this, idle, 15);
+        }
+        
+        
+        
+       
         //stopRunFrame = 14;
     }
 
@@ -331,21 +348,43 @@ public class BaseEntity implements entityState {
 
 
     public void setIdle() {
-        setEntState(new idleState(this, idle, 30));
+        if (type.equals("player")) {
+            setEntState(new idleState(this, idle, 30));
+        }
+        else {
+            setEntState(new idleState(this, idle, 15));
+        }    
+
     }
 
     private void setMove() {
-        setEntState(new moveState(this, run, 15));
+        if (type.equals("player")) {
+            setEntState(new moveState(this, run, 15));
+        }
+        else {
+            setEntState(new moveState(this, run, 10));
+        } 
+        
     }
 
     private void setAttack() {
         int x = (int)Math.random() * 3;
-        if (x == 0) {
-            setEntState(new moveState(this, att1, 15));
-        } else if (x == 1) {
-            setEntState(new moveState(this, att2, 15));
+        if (type.equals("player")) {
+            if (x == 0) {
+                setEntState(new attackState(this, att1, 15));
+            } else if (x == 1) {
+                setEntState(new attackState(this, att2, 15));
+            } else {
+                setEntState(new attackState(this, att3, 15));
+            }
         } else {
-            setEntState(new moveState(this, att3, 15));
+            if (x == 0) {
+                setEntState(new attackState(this, att1, 15));
+            } else if (x == 1) {
+                setEntState(new attackState(this, att2, 15));
+            } else {
+                setEntState(new attackState(this, att3, 15));
+            }
         }
     }
 
