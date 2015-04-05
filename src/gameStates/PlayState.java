@@ -11,7 +11,8 @@ import inventory.ItemFactory;
 import inventory.Weapon;
 import entities.BaseEntity;
 import entities.EntityFactory;
-import entityStates.idleState;
+import entityStates.IdleState;
+import inventory.Potion;
 import java.util.List;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
@@ -19,6 +20,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.*;
@@ -35,18 +37,16 @@ public class PlayState extends BasicGameState {
     SpriteSheet groundTiles;
     int xOffset;
     int yOffset;
-    BaseEntity player;
+    private BaseEntity player;
     int tileSize;
     int screenWidthTiles;
     int screenHeightTiles;
     boolean showInfo;
 
-
-    
     List<String> messages;
-    
-    
-    //FieldOfView fov;
+    private Music music;
+    private ItemFactory itemFactory;
+    private EntityFactory entFactory;
 
     @Override
     public int getID() {
@@ -62,28 +62,31 @@ public class PlayState extends BasicGameState {
         
         ground = new Image("data/DungeonCrawl_ProjectUtumnoTileset.png");
         
+        music = new Music("data/Music/Desolate.wav");
+               
         groundTiles = new SpriteSheet(ground, tileSize, tileSize);
         createWorld();
         showInfo = true;
-        
-        /*
-        messages = new ArrayList<>();
-        messages.add("I'm a message box");
-        messages.add("I show messages");
-        messages.add("this is a message");
-        * */
+               
         gc.setShowFPS(false);
-        
 
-
-        EntityFactory entFactory = new EntityFactory(world);
+        entFactory = new EntityFactory(world);
         player = entFactory.newPlayer();
-        ItemFactory itemFactory = new ItemFactory(world);
+        itemFactory = new ItemFactory(world);
         
-        player.setEquipedArmour(new Armour("Tunic", 36, 21, 0, "Simple tunic"));
-        player.setEquipedWeapon(new Weapon("Dagger", 19, 29, 1, "+1 Attack"));
-        player.setOffHand(new Item("Torch", 57, 18, "Lights up Area"));
-
+        getPlayer().setEquipedArmour(new Armour("Tunic", 36, 21, 0, "Simple tunic"));
+        getPlayer().setEquipedWeapon(new Weapon("Dagger", 19, 29, 1, "+1 Attack"));
+        getPlayer().setOffHand(new Item("Torch", 57, 18, "Lights up Area"));
+       
+        xOffset = getScrollX();
+        yOffset = getScrollY();
+        
+        music.setVolume(0.4f);        
+    }
+    
+    @Override
+    public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
+        music.loop();
         for (int i = 0; i < world.getDepth(); i++) {
             for (int j = 0; j < 8 + (2 * i); j++) {
                 entFactory.newMyconoid(true, i);
@@ -94,53 +97,36 @@ public class PlayState extends BasicGameState {
             for (int j = 0; j < 8 + i; j++) {
                 entFactory.newLizard(i);
             }
-        }
+        } 
 
         for (int i = 0; i < world.getDepth(); i++) {
             for (int j = 0; j < 3 + i; j++) {
-                entFactory.newGoblin(i, player);
+                entFactory.newGoblin(i, getPlayer());
             }
         }
 
-        entFactory.newManticore(world.getDepth() - 1, player);
+        entFactory.newManticore(world.getDepth() - 1, getPlayer());
 
-        
         for (int i = 0; i < world.getDepth(); i++) {
             itemFactory.newLeatherArmour(i);
             itemFactory.newLeatherArmour(i);
-            itemFactory.newLeatherArmour(i);
-            itemFactory.newLeatherArmour(i);
-            itemFactory.newLeatherArmour(i);
-            itemFactory.newLeatherArmour(i);
-            itemFactory.newTunic(i);
-            itemFactory.newTunic(i);
-            itemFactory.newTunic(i);
-            itemFactory.newTunic(i);
             itemFactory.newTunic(i);
             itemFactory.newShield(i);
             itemFactory.newShield(i);
             itemFactory.newShield(i);
-            itemFactory.newShield(i);
-            itemFactory.newShield(i);
-            itemFactory.newShield(i);
-            itemFactory.newDagger(i);
-            itemFactory.newDagger(i);
-            itemFactory.newDagger(i);
-            itemFactory.newDagger(i);
             itemFactory.newDagger(i);
             itemFactory.newAxe(i);
-            itemFactory.newAxe(i);
-            itemFactory.newAxe(i);
-            itemFactory.newAxe(i);
-            itemFactory.newAxe(i);
-            itemFactory.newSword(i);
-            itemFactory.newSword(i);
-            itemFactory.newSword(i);
-            itemFactory.newSword(i);
             itemFactory.newSword(i);
             itemFactory.newTorch(i);
-            itemFactory.newTorch(i);
-            itemFactory.newTorch(i);
+            itemFactory.newBlackPotion(i);
+            itemFactory.newBlackPotion(i);
+            itemFactory.newBlackPotion(i);
+            itemFactory.newBluePotion(i);
+            itemFactory.newBluePotion(i);
+            itemFactory.newBluePotion(i);
+            itemFactory.newBrownPotion(i);
+            itemFactory.newBrownPotion(i);
+            itemFactory.newBrownPotion(i);
             if (Math.random() < i / 2f) {
                 itemFactory.newLeatherArmour(i);
             }
@@ -151,14 +137,12 @@ public class PlayState extends BasicGameState {
                 itemFactory.newPlateArmour(i);
             }
         }
-
-        xOffset = getScrollX();
-        yOffset = getScrollY();
     }
 
     @Override
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-        int z = player.getPosZ();
+        //music.loop();
+        int z = getPlayer().getPosZ();
         groundTiles.startUse();
         for (int x = xOffset; x < xOffset + screenWidthTiles; x++) {
             for (int y = yOffset; y < yOffset + screenHeightTiles; y++) {
@@ -169,35 +153,40 @@ public class PlayState extends BasicGameState {
                 if (!player.canSeeDim(z, x, y)) {
                     groundTiles.getSubImage(4, 1).draw(x * tileSize, y * tileSize);
                 }
-                if (!player.getEquipment(2).getName().equals("Torch") && player.canSeeDim(z, x, y) && !player.canSeeLit(z, x, y)) {
+                if (getPlayer().canSeeDim(z, x, y) && !player.canSeeLit(z, x, y)) {
                     groundTiles.getSubImage(53, 0).draw(x * tileSize, y * tileSize);
                 }
             }
         }
         for (Item i : world.worldInventory) {
-            if (player.canSeeLit(z, i.getPosX(), i.getPosY()) && z == i.getPosZ()) {
+            if (getPlayer().canSeeLit(z, i.getPosX(), i.getPosY()) && z == i.getPosZ()) {
                 groundTiles.getSubImage(i.getImageCol(), i.getImageRow()).draw(tileSize * i.getPosX(), tileSize * i.getPosY());
             }
-            if (player.getEquipment(2).getName().equals("Torch") && player.canSeeDim(z, i.getPosX(), i.getPosY()) && !player.canSeeLit(z, i.getPosX(), i.getPosY()) && z == i.getPosZ()) {
-                groundTiles.getSubImage(i.getImageCol(), i.getImageRow()).draw(tileSize * i.getPosX(), tileSize * i.getPosY());
+            if (getPlayer().canSeeDim(z, i.getPosX(), i.getPosY()) && !player.canSeeLit(z, i.getPosX(), i.getPosY()) && z == i.getPosZ()) {
+                //groundTiles.getSubImage(i.getImageCol(), i.getImageRow()).draw(tileSize * i.getPosX(), tileSize * i.getPosY());
             }
         }
+        
         for (BaseEntity be : world.entities) {
-            if (player.canSeeLit(z, be.getPosX(), be.getPosY()) && z == be.getPosZ()) {
-                groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
+            if (getPlayer().canSeeLit(z, be.getPosX(), be.getPosY()) && z == be.getPosZ()) {
+                if (!be.getType().equals("player") && !be.getType().equals("goblin")) {
+                    groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
+                }
                 if (be.getType().equals("player") || be.getType().equals("goblin")) {
-                    be.render();
+                    //be.render();
+                    groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
                 }
             }
         }
-        player.playerUI(g, z, xOffset, yOffset, groundTiles, tileSize, screenWidthTiles, screenHeightTiles);
+        getPlayer().playerUI(g, z, xOffset, yOffset, groundTiles, tileSize, screenWidthTiles, screenHeightTiles);
         
         g.setColor(Color.white);
         g.drawString("Play State FPS: " + gc.getFPS(), tileSize * (24 + xOffset), (yOffset + 16) * tileSize);
         g.drawString("Press Escape to lose", tileSize * (24 + xOffset), (yOffset + 17) * tileSize);
-        g.drawString("Press Enter to win", tileSize * (24 + xOffset), (yOffset + 18) * tileSize);
-        g.drawString("Entities: " + world.entities.size() + " Items: " + world.worldInventory.size(), tileSize * (24 + xOffset), (yOffset + 19) * tileSize);
-        g.drawString("Player x : " + player.getPosX() + " y: " + player.getPosY() + " z: " + player.getPosZ(), tileSize * (24 + xOffset), (yOffset + 20) * tileSize);
+        //g.drawString("Press Enter to win", tileSize * (24 + xOffset), (yOffset + 18) * tileSize);
+        g.drawString("Entity State: " + getPlayer().getEntState(), tileSize * (22 + xOffset), (yOffset + 18) * tileSize);
+        //g.drawString("Entities: " + world.entities.size() + " Items: " + world.worldInventory.size(), tileSize * (24 + xOffset), (yOffset + 19) * tileSize);
+        g.drawString("Player x : " + getPlayer().getPosX() + " y: " + getPlayer().getPosY() + " z: " + getPlayer().getPosZ(), tileSize * (24 + xOffset), (yOffset + 20) * tileSize);
         for (BaseEntity be : world.entities) {
             if ("manticore".equals(be.getType())) {
                 g.drawString("boss : " + be.getPosX() + " y: " + be.getPosY() + " z: " + be.getPosZ(), tileSize * (24 + xOffset), (yOffset + 21) * tileSize);
@@ -208,113 +197,122 @@ public class PlayState extends BasicGameState {
             renderInfo(g);
         }
         
-        
-        
-        
         groundTiles.endUse();
     }
 
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int i) throws SlickException {
+        
         if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
             sbg.enterState(3);
         }
         if (gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
             sbg.enterState(2);
         }
-        if (gc.getInput().isKeyPressed(Input.KEY_RIGHT)) {
-            player.setSelectX(1);
+        if (gc.getInput().isKeyPressed(Input.KEY_RIGHT) || gc.getInput().isKeyPressed(Input.KEY_MULTIPLY)) {
+            getPlayer().setSelectX(1);
         }
-        if (gc.getInput().isKeyPressed(Input.KEY_LEFT)) {
-            player.setSelectX(-1);
+        if (gc.getInput().isKeyPressed(Input.KEY_LEFT) || gc.getInput().isKeyPressed(Input.KEY_DIVIDE)) {
+            getPlayer().setSelectX(-1);
         } 
-        if (gc.getInput().isKeyPressed(Input.KEY_UP)) {
-            player.setSelectY(-1);
+        if (gc.getInput().isKeyPressed(Input.KEY_UP) || gc.getInput().isKeyPressed(Input.KEY_SUBTRACT)) {
+            getPlayer().setSelectY(-1);
         }
-        if (gc.getInput().isKeyPressed(Input.KEY_DOWN)) {
-            player.setSelectY(1);
+        if (gc.getInput().isKeyPressed(Input.KEY_DOWN) || gc.getInput().isKeyPressed(Input.KEY_ADD)) {
+            getPlayer().setSelectY(1);
         }
         
-        if (player.isIdle()) {
+        if (true) {//player.isIdle()) {
             
-            if(gc.getInput().isKeyDown(Input.KEY_NUMPAD6)) {
-                player.stopAnim();
-                player.moveBy(0, 1, 0);
+            if(gc.getInput().isKeyPressed(Input.KEY_NUMPAD6)) {
+                //
+                //player.stopAnim();
+                getPlayer().moveBy(0, 1, 0);
+                //player.setMove();
                 xOffset = getScrollX();
                 world.update();
             }
-            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD4)) {
-                player.stopAnim();
-                player.moveBy(0, -1, 0);
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD4)) {
+                //player.stopAnim();
+                getPlayer().moveBy(0, -1, 0);
                 xOffset = getScrollX();
                 world.update();
             }
-            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD8)) {
-                player.stopAnim();
-                player.moveBy(0, 0, -1);
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD8)) {
+                //player.stopAnim();
+                getPlayer().moveBy(0, 0, -1);
                 yOffset = getScrollY();
                 world.update();
             }
-            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD2)) {
-                player.stopAnim();
-                player.moveBy(0, 0, 1);
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD2)) {
+                //player.stopAnim();
+                getPlayer().moveBy(0, 0, 1);
                 yOffset = getScrollY();
                 world.update();
             }
-            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD9)) {
-                player.stopAnim();
-                player.moveBy(0, 1, -1);
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD9)) {
+                //player.stopAnim();
+                getPlayer().moveBy(0, 1, -1);
                 xOffset = getScrollX();
                 world.update();
             }
-            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD7)) {
-                player.stopAnim();
-                player.moveBy(0, -1, -1);
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD7)) {
+                //player.stopAnim();
+                getPlayer().moveBy(0, -1, -1);
                 xOffset = getScrollX();
                 world.update();
             }
-            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD1)) {
-                player.stopAnim();
-                player.moveBy(0, -1, 1);
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD1)) {
+                //player.stopAnim();
+                getPlayer().moveBy(0, -1, 1);
                 xOffset = getScrollX();
                 world.update();
             }
-            if (gc.getInput().isKeyDown(Input.KEY_NUMPAD3)) {
-                player.stopAnim();
-                player.moveBy(0, 1, 1);
+            if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD3)) {
+                //player.stopAnim();
+                getPlayer().moveBy(0, 1, 1);
                 xOffset = getScrollX();
                 world.update();
             }
         }
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD5)) {
-            if (world.tile(player.getPosZ(), player.getPosX(), player.getPosY()) == Tile.STAIRSUP) {
-                player.moveBy(-1, 0, 0);
-            } else if (world.tile(player.getPosZ(), player.getPosX(), player.getPosY()) == Tile.STAIRSDOWN) {
-                player.moveBy(1, 0, 0);
+            if (world.tile(getPlayer().getPosZ(), getPlayer().getPosX(), getPlayer().getPosY()) == Tile.STAIRSUP) {
+                getPlayer().moveBy(-1, 0, 0);
+            } else if (world.tile(getPlayer().getPosZ(), getPlayer().getPosX(), getPlayer().getPosY()) == Tile.STAIRSDOWN) {
+                getPlayer().moveBy(1, 0, 0);
             }
             world.update();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_P)) {
-            Item pickupItem = world.isItemAt(player.getPosZ(), player.getPosX(), player.getPosY());
+            Item pickupItem = world.isItemAt(getPlayer().getPosZ(), getPlayer().getPosX(), getPlayer().getPosY());
             if (pickupItem != null) {
                 world.worldInventory.remove(pickupItem);
-                player.getInventry().add(pickupItem);
+                getPlayer().getInventry().add(pickupItem);
                 world.update();
             }
         }
         if (gc.getInput().isKeyPressed(Input.KEY_D)) {
-            player.drop();
+            getPlayer().drop();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_E)) {
-            player.equip();
+            getPlayer().equip();
+        }
+        if (gc.getInput().isKeyPressed(Input.KEY_U)) {
+            getPlayer().use();
+            /*Item useItem = super.getInventry().get((selectY * 5) + selectX);
+            if (useItem != null && useItem.getClass().equals(Potion.class)) {
+                player.getInventry().remove(useItem);
+                Potion p = (Potion) useItem;
+                player.addEffect(p.getEffect());
+                p.getEffect().setBE(player);
+                world.update();
+            }*/
         }
         if (gc.getInput().isKeyPressed(Input.KEY_I)) {
             showInfo = !showInfo;
         }
-        if (gc.getInput().isKeyPressed(Input.KEY_M)) {
-            //sbg.enterState(5);
-        }
-        if (player.getHP() < 1) {
+        
+        if (getPlayer().getHP() < 1) {
             sbg.enterState(3);
         }
         if (world.ifWon()) {
@@ -334,16 +332,23 @@ public class PlayState extends BasicGameState {
     }
 
     public int getScrollX() {
-        return Math.max(0, Math.min(player.getPosX() - screenWidthTiles / 2, world.getWidth() - screenWidthTiles));
+        return Math.max(0, Math.min(getPlayer().getPosX() - screenWidthTiles / 2, world.getWidth() - screenWidthTiles));
     }
 
     public int getScrollY() {
-        return Math.max(0, Math.min(player.getPosY() - screenHeightTiles / 2, world.getHeight() - screenHeightTiles));
+        return Math.max(0, Math.min(getPlayer().getPosY() - screenHeightTiles / 2, world.getHeight() - screenHeightTiles));
     }
 
     private void createWorld() {
         world = new WorldBuilder(6, 80, 80)
                 .makeCaves()
                 .build();
+    }
+
+    /**
+     * @return the player
+     */
+    public BaseEntity getPlayer() {
+        return player;
     }
 }

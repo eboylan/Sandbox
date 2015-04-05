@@ -19,7 +19,7 @@ public class EntityFactory {
     }
     
     public BaseEntity newPlayer() throws SlickException {
-        BaseEntity player = new Player("player", world, 4, 2, 6, 2, 12, 9);
+        BaseEntity player = new Player("player", world, 4, 2, 6, 2, 12, 6);
         world.putInClearTile(player, 0);
         new EntityAI(player);
         return player;
@@ -40,7 +40,7 @@ public class EntityFactory {
     }
     
     public BaseEntity newGoblin(int depth, BaseEntity player) throws SlickException {
-        BaseEntity goblin = new BaseEntity("goblin", world, 3, 2, 6, 2, 5, 4);
+        BaseEntity goblin = new BaseEntity("goblin", world, 3, 2, 6, 2, 5, 6);
         world.putInClearTile(goblin, depth);
         new HuntingMonsterAI(goblin, player);
         return goblin;

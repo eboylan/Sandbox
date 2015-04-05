@@ -4,6 +4,7 @@ package inventory;
 import inventory.Armour;
 import inventory.Weapon;
 import world.World;
+import entityEffects.*;
 
 /*
  * To change this template, choose Tools | Templates
@@ -73,5 +74,23 @@ public class ItemFactory {
         Item tc = new Item("Torch", 57, 18, "Lights up area");
         world.putItemInClearTile(tc, depth);
         return tc;
+    }
+    
+    public Item newBlackPotion(int depth) {
+        Item bp = new Potion("Black Potion", 28, 24, new ModAttack(null, 10, 2), "Strange black liquid");
+        world.putItemInClearTile(bp, depth);
+        return bp;
+    }
+    
+    public Item newBluePotion(int depth) {
+        Item bp = new Potion("Blue Potion", 29, 24, new ModDef(null, 10, 2), "Strange blue liquid");
+        world.putItemInClearTile(bp, depth);
+        return bp;
+    }
+    
+    public Item newBrownPotion(int depth) {
+        Item bp = new Potion("Brown Potion", 30, 24, new ModHP(null, -1, 2), "Strange brown liquid");
+        world.putItemInClearTile(bp, depth);
+        return bp;
     }
 }

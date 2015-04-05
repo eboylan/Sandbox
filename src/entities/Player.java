@@ -7,6 +7,7 @@ package entities;
 import inventory.Armour;
 import inventory.Icon;
 import inventory.Item;
+import inventory.Potion;
 import inventory.Weapon;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -80,7 +81,11 @@ public class Player extends BaseEntity {
         if (super.getInventry().get(5 * selectY + selectX) != null) {
             g.drawString("" + super.getInventry().get(5 * selectY + selectX).getName(), (xOffset + 24) * tileSize, (yOffset + 13) * tileSize);
             g.drawString("" + super.getInventry().get(5 * selectY + selectX).getDesription(), (xOffset + 24) * tileSize, (yOffset + 14) * tileSize);
-            g.drawString("(E)quip or (D)rop", (xOffset + 24) * tileSize, (yOffset + 14) * tileSize + tileSize/2);
+            if (super.getInventry().get(5 * selectY + selectX).getClass().equals(Potion.class)) {
+                g.drawString("(U)se or (D)rop", (xOffset + 24) * tileSize, (yOffset + 14) * tileSize + tileSize/2);
+            } else {
+                g.drawString("(E)quip or (D)rop", (xOffset + 24) * tileSize, (yOffset + 14) * tileSize + tileSize/2);
+            }
         }
         
 
@@ -128,6 +133,13 @@ public class Player extends BaseEntity {
     public int getSelectY() {
         return selectY;
     }
+    
+    @Override
+    public int getVisionRadius() {
+        int vr = super.getVisionRadius();
+        if (getEquipment(2).getName().equals("Torch")) vr += 3;
+        return vr;
+    }
 
     public void drop() {
         Item dropItem = super.getInventry().get((selectY * 5) + selectX);
@@ -156,5 +168,15 @@ public class Player extends BaseEntity {
                 super.setOffHand(equipItem);
             }
         }
+    }
+    
+    public void use() {
+        Item useItem = super.getInventry().get((selectY * 5) + selectX);
+            if (useItem != null && useItem.getClass().equals(Potion.class)) {
+                super.getInventry().remove(useItem);
+                Potion p = (Potion) useItem;
+                super.addEffect(p.getEffect());
+                p.getEffect().setBE(this);            
+            }
     }
 }

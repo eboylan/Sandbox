@@ -4,11 +4,15 @@
  */
 package entities;
 
+
+import entityEffects.*;
 import inventory.Inventory;
 import inventory.Item;
 import inventory.Weapon;
 import entityStates.*;
 import inventory.Armour;
+import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -17,11 +21,12 @@ import util.Point;
 import world.Tile;
 import world.World;
 
+
 /**
  *
  * @author Emmet
  */
-public class BaseEntity implements entityState {
+public class BaseEntity implements EntityState, Comparable<BaseEntity> {
     //name
     private String type;
     
@@ -34,10 +39,13 @@ public class BaseEntity implements entityState {
     private int posX;
     private int posY;
     
+    private long fCount;
+    
     private int attValue;
     private int defValue;
     private int hitPoints;
     private int visionRadius;
+    private int food;
     
     private static final int tileSize = 32;
     
@@ -45,9 +53,13 @@ public class BaseEntity implements entityState {
     private int imageRow;
     private int imageCol;
     
+    private boolean alive = true;
+    
     private Inventory inventory;
     private Item[] equipment;
-    private entityState entState;
+    private EntityState entState;
+    private EntityState[] animationStates;
+    private CopyOnWriteArrayList<Effect> status;
     
     private SpriteSheet runSheet;
     private Animation run;
@@ -61,6 +73,8 @@ public class BaseEntity implements entityState {
     private int facing;
     private final SpriteSheet idleSheet;
     private final Animation idle;
+    private final SpriteSheet deathSheet;
+    private final Animation die;
     
     
     public BaseEntity(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) throws SlickException {
@@ -74,8 +88,15 @@ public class BaseEntity implements entityState {
         this.visionRadius = vr;
         this.inventory = new Inventory(20);
         this.equipment = new Item[3];
+        animationStates = new EntityState[6];
+        
+        status = new CopyOnWriteArrayList<>();
+        status.add(new Hunger(this, -1));
+        status.add(new Regenerate(this, -1));
         
         facing = 1;
+        fCount = 0;
+        food = 40;
         
         if(type.equals("player")){
             runSheet = new SpriteSheet("data/Hero/HeroRun.png", 140, 140);
@@ -83,30 +104,45 @@ public class BaseEntity implements entityState {
             att2Sheet = new SpriteSheet("data/Hero/HeroAttackB.png", 140, 140);
             att3Sheet = new SpriteSheet("data/Hero/HeroAttackC.png", 140, 140);
             idleSheet = new SpriteSheet("data/Hero/HeroFidget.png", 140, 140);
-            run = new Animation(runSheet, 90);
+            deathSheet = new SpriteSheet("data/Hero/HeroDeath.png", 140, 140);
+            run = new Animation(runSheet, 45);
             att1 = new Animation(att1Sheet, 90);
             att2 = new Animation(att2Sheet, 90);
             att3 = new Animation(att3Sheet, 90);
             idle = new Animation(idleSheet, 90);
-            this.entState = new idleState(this, idle, 30);
+            die = new Animation(deathSheet, 90);
+            animationStates[0] = new IdleState(this, idle, 30);
+            animationStates[1] = new AttackState(this, att1, 15);
+            animationStates[2] = new AttackState(this, att2, 15);
+            animationStates[3] = new AttackState(this, att3, 15);
+            animationStates[4] = new MoveState(this, run, 15);
+            animationStates[5] = new DeathState(this, die, 15);
+            this.entState = animationStates[0];
+            
         } else {
             runSheet = new SpriteSheet("data/Goblin/GoblinRun.png", 120, 120);
             att1Sheet = new SpriteSheet("data/Goblin/GoblinAttack.png", 120, 120);
             att2Sheet = new SpriteSheet("data/Goblin/GoblinAttack.png", 120, 120);
             att3Sheet = new SpriteSheet("data/Goblin/GoblinAttack.png", 120, 120);
             idleSheet = new SpriteSheet("data/Goblin/GoblinFidget.png", 120, 120);
+            deathSheet = new SpriteSheet("data/Goblin/GoblinDeath.png", 140, 140);
             run = new Animation(runSheet, 90);
             att1 = new Animation(att1Sheet, 90);
             att2 = new Animation(att2Sheet, 90);
             att3 = new Animation(att3Sheet, 90);
             idle = new Animation(idleSheet, 90);
-             this.entState = new idleState(this, idle, 15);
+            die = new Animation(deathSheet, 90);
+            animationStates[0] = new IdleState(this, idle, 15);
+            animationStates[1] = new AttackState(this, att1, 15);
+            animationStates[2] = new AttackState(this, att2, 15);
+            animationStates[3] = new AttackState(this, att3, 15);
+            animationStates[4] = new MoveState(this, run, 10);
+            animationStates[5] = new DeathState(this, die, 10);
+            this.entState = animationStates[0];
         }
         
         
-        
        
-        //stopRunFrame = 14;
     }
 
     public String getType() {
@@ -193,13 +229,19 @@ public class BaseEntity implements entityState {
             setFacing(5);
         }
         
+        if(target == null || !target.isAlive()) {
             
-        if(target == null) {
-            entAI.onEnter(posZ + z, posX + x, posY + y, getWorld().tile(posZ + z, posX + x, posY + y));
-            setMove();
+            if(canEnter(posZ + z, posX + x, posY + y)) {
+                getEntAI().onEnter(posZ + z, posX + x, posY + y, getWorld().tile(posZ + z, posX + x, posY + y));
+                setMove();
+            } else {
+                setIdle();
+            }
+            
+            
         } else {
             attack(target);
-            setAttack();
+            //setAttack(target);
         }
     }
     
@@ -211,7 +253,11 @@ public class BaseEntity implements entityState {
     }
     
     public void update() {
-        entAI.onUpdate();
+        fCount++;
+        getEntAI().onUpdate();
+        for(Effect e : status) {
+            e.update();
+        }
     }
 
     public boolean canEnter(int z, int x, int y) {
@@ -221,9 +267,15 @@ public class BaseEntity implements entityState {
     public void modHP(int x) {
         hitPoints += x;
         
-        if(hitPoints < 1) {
+        if(hitPoints < 1 && getEntState() != animationStates[5]) {
             if(type == "manticore") getWorld().setWin(true);
-            getWorld().remove(this);
+            //getWorld().remove(this);
+            if(type.equals("player")) {
+                //entState = animationStates[5];
+                //start();
+            } else {
+                getWorld().remove(this);
+            }
         }
     }
 
@@ -266,15 +318,16 @@ public class BaseEntity implements entityState {
      * @return the visionRadius
      */
     public int getVisionRadius() {
-        return visionRadius;
+        int vr = visionRadius;
+        return vr;
     }
     
     public boolean canSeeDim(int z, int x, int y) {
-        return entAI.canSeeDim(z, x, y);
+        return getEntAI().canSeeDim(z, x, y);
     }
     
     public boolean canSeeLit(int z, int x, int y) {
-        return entAI.canSeeLit(z, x, y);
+        return getEntAI().canSeeLit(z, x, y);
     }
     
     public Tile tile(int z, int x, int y) {
@@ -306,8 +359,6 @@ public class BaseEntity implements entityState {
         return equipment[i];
     }
     
-    
-
     /**
      * @param equipedArmour the equipedArmour to set
      */
@@ -348,44 +399,20 @@ public class BaseEntity implements entityState {
 
 
     public void setIdle() {
-        if (type.equals("player")) {
-            setEntState(new idleState(this, idle, 30));
-        }
-        else {
-            setEntState(new idleState(this, idle, 15));
-        }    
-
+        entState = animationStates[0]; 
+        start();
     }
 
-    private void setMove() {
-        if (type.equals("player")) {
-            setEntState(new moveState(this, run, 15));
-        }
-        else {
-            setEntState(new moveState(this, run, 10));
-        } 
-        
+    public void setMove() {
+        entState = animationStates[4]; 
+        start();
     }
 
-    private void setAttack() {
+    public void setAttack(BaseEntity target) {
         int x = (int)Math.random() * 3;
-        if (type.equals("player")) {
-            if (x == 0) {
-                setEntState(new attackState(this, att1, 15));
-            } else if (x == 1) {
-                setEntState(new attackState(this, att2, 15));
-            } else {
-                setEntState(new attackState(this, att3, 15));
-            }
-        } else {
-            if (x == 0) {
-                setEntState(new attackState(this, att1, 15));
-            } else if (x == 1) {
-                setEntState(new attackState(this, att2, 15));
-            } else {
-                setEntState(new attackState(this, att3, 15));
-            }
-        }
+        entState = animationStates[x];
+        entState.setTarget(target);
+        start();
     }
 
     /**
@@ -405,22 +432,102 @@ public class BaseEntity implements entityState {
     /**
      * @return the entState
      */
-    public entityState getEntState() {
+    public EntityState getEntState() {
         return entState;
     }
 
     /**
      * @param entState the entState to set
      */
-    public void setEntState(entityState entState) {
+    public void setEntState(EntityState entState) {
         this.entState = entState;
     }
     
     public boolean isIdle() {
-        return getEntState().isIdle();
+        return entState.isIdle();
     }
     
     public void stopAnim() {
-        getEntState().stopAnim();
+        entState.stopAnim();
+    }
+    
+    public static int compareY() {
+        return 1;
+    }
+
+    /**
+     * @return the entAI
+     */
+    public EntityAI getEntAI() {
+        return entAI;
+    }
+
+    @Override
+    public int compareTo(BaseEntity be) {
+        int y = be.getPosY();
+        return y - this.posY;
+        //throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void start() {
+        entState.start();
+    }
+
+    public void kill() {
+        entState = animationStates[5];
+        start();
+        //2world.entities.remove(this);
+    }
+    
+    public boolean isAlive() {
+        return alive;
+    }
+
+    @Override
+    public void setTarget(BaseEntity target) {
+        entState.setTarget(target);
+    }
+
+    /**
+     * @return the food
+     */
+    public int getFood() {
+        return food;
+    }
+
+    /**
+     * @param food the food to set
+     */
+    public void modFood(int c) {
+        this.food += c;
+    }
+
+    public long getFcount() {
+        return fCount;
+    }
+
+    public void removeEffect(Effect e) {
+        status.remove(e);
+    }
+    
+    public void addEffect(Effect e) {
+        status.add(e);
+    }
+
+    public void effectAttack(int mod) {
+        this.attValue += mod;
+    }
+
+    public void effectDefence(int mod) {
+        this.defValue += mod;
+    }
+
+    public void effectHP(int mod) {
+        this.hitPoints += mod;
+    }
+
+    public void use() {
+        //leave for player
     }
 }

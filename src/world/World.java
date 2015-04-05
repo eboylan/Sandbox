@@ -7,7 +7,10 @@ package world;
 import inventory.Item;
 import entities.BaseEntity;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 
 /**
  *
@@ -19,7 +22,7 @@ public class World {
     private int depth;
     private int height;
     private int width;
-    public List<BaseEntity> entities;
+    public CopyOnWriteArrayList<BaseEntity> entities;
     public List<Item> worldInventory;
     private boolean won = false;
 
@@ -48,7 +51,7 @@ public class World {
         this.depth = tiles.length;
         this.width = tiles[0].length;
         this.height = tiles[0][0].length;
-        this.entities = new ArrayList<>();
+        this.entities = new CopyOnWriteArrayList<>();
         this.worldInventory = new ArrayList<>();
     }
 
@@ -104,6 +107,8 @@ public class World {
 
     public void update() {
         List<BaseEntity> toUpdate = new ArrayList<>(entities);
+        //Collections.sort(toUpdate, new MyComparator());
+        //Collections.sort(toUpdate);
             for (BaseEntity be : toUpdate){
                 be.update();
             }

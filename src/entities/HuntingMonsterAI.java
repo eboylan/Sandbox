@@ -22,11 +22,7 @@ public class HuntingMonsterAI extends EntityAI {
     }
 
     public void onUpdate() {
-        /*if (Math.random() < 0.5) {
-            return;
-        }*/
-
-        if (be.canSeeLit(target.getPosZ(), target.getPosX(), target.getPosY())) {
+        if (be.canSeeLit(target.getPosZ(), target.getPosX(), target.getPosY()) || be.canSeeDim(target.getPosZ(), target.getPosX(), target.getPosY()) && target.getEquipment(2).equals("torch")) {
             hunt(target);
         } else {
             wander();
