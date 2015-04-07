@@ -13,6 +13,7 @@ public enum Icon {
     ATTACK(8, 1),
     DEFENCE(5, 1),
     HITPOINTS(0, 0),
+    FOOD(47, 23),
     SELECTBOX(10, 0),
     UIBORDER(31, 17),
     CHEST(43, 45),

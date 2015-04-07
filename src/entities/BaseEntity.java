@@ -11,6 +11,7 @@ import inventory.Item;
 import inventory.Weapon;
 import entityStates.*;
 import inventory.Armour;
+import inventory.Food;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.newdawn.slick.Animation;
@@ -91,8 +92,8 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
         animationStates = new EntityState[6];
         
         status = new CopyOnWriteArrayList<>();
-        status.add(new Hunger(this, -1));
-        status.add(new Regenerate(this, -1));
+        //status.add(new Hunger(this, -1));
+        //status.add(new Regenerate(this, -1));
         
         facing = 1;
         fCount = 0;
@@ -247,13 +248,16 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
     
     public void attack(BaseEntity target) {
         int dmg = Math.max(0, getAV() - target.getDV());
-        dmg = (int) (Math.random() * dmg + 1); 
-        
+        dmg = (int) (Math.random() * dmg + 1);
+        if (this.type.equals("player") || target.type.equals("player")) {
+            world.getPlayer().message(this.type + " attacks " + target.type+ System.getProperty("line.separator") + " for " + dmg + " damage");
+        }
         target.modHP(-dmg);
     }
     
     public void update() {
         fCount++;
+        if (food > 99) food = 99;
         getEntAI().onUpdate();
         for(Effect e : status) {
             e.update();
@@ -274,6 +278,7 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
                 //entState = animationStates[5];
                 //start();
             } else {
+                drop();
                 getWorld().remove(this);
             }
         }
@@ -383,7 +388,21 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
     }
 
     public void drop() {
-        //leave for player
+        for (int i = 0; i < inventory.length(); i++) {
+            Item dropItem = inventory.get(i);
+            if (dropItem != null) {
+               dropItem.setPos(getPosZ(), getPosX(), getPosY());
+               getWorld().worldInventory.add(dropItem);
+               //inventory.remove(dropItem);
+            }
+        }
+        for (int i = 0; i < equipment.length; i++) {
+            Item dropItem = equipment[i];
+            if (dropItem != null) {
+               dropItem.setPos(getPosZ(), getPosX(), getPosY());
+               getWorld().worldInventory.add(dropItem);
+            }
+        }
     }
 
     public void equip() {
@@ -529,5 +548,9 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
 
     public void use() {
         //leave for player
+    }
+
+    void inventoryAdd(Item i) {
+        inventory.add(i);
     }
 }

@@ -51,4 +51,8 @@ public class Inventory {
         }
         return size == inventory.length;
     }
+    
+    public int length() {
+        return inventory.length;
+    }
 }

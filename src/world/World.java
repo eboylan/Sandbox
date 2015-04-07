@@ -6,6 +6,7 @@ package world;
 
 import inventory.Item;
 import entities.BaseEntity;
+import entities.Player;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -107,8 +108,7 @@ public class World {
 
     public void update() {
         List<BaseEntity> toUpdate = new ArrayList<>(entities);
-        //Collections.sort(toUpdate, new MyComparator());
-        //Collections.sort(toUpdate);
+        Collections.sort(toUpdate);
             for (BaseEntity be : toUpdate){
                 be.update();
             }
@@ -124,5 +124,14 @@ public class World {
         } while (tile(depth, x, y).isGround() == false);
         i.setPos(depth, x, y);
         worldInventory.add(i);
+    }
+    
+    public Player getPlayer() {
+        for (BaseEntity be : entities) {
+            if(be.getType().equals("player")) {
+                return (Player) be;
+            }
+        }
+        return null;
     }
 }

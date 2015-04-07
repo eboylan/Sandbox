@@ -5,10 +5,13 @@
 package entities;
 
 import inventory.Armour;
+import inventory.Food;
 import inventory.Icon;
 import inventory.Item;
 import inventory.Potion;
 import inventory.Weapon;
+import java.util.ArrayList;
+import java.util.List;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -23,11 +26,16 @@ public class Player extends BaseEntity {
 
     private int selectX;
     private int selectY;
+    List<String> messages;
 
     public Player(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) throws SlickException {
         super(type, w, ic, ir, av, dv, hp, vr);
         selectX = 0;
         selectY = 0;
+        messages = new ArrayList<>();
+        messages.add("I'm a message box");
+        messages.add("I show messages");
+        messages.add("this is a message");
     }
 
     public void playerUI(Graphics g, int z, int xOffset, int yOffset, SpriteSheet groundTiles, int tileSize, int screenWidthTiles, int screenHeightTiles) {
@@ -37,18 +45,21 @@ public class Player extends BaseEntity {
             }
         }
         g.setColor(Color.black);
-        g.fillRect((xOffset + 24) * tileSize, (yOffset + 2) * tileSize, 3 * tileSize, tileSize);
+        g.fillRect((xOffset + 24) * tileSize, (yOffset + 2) * tileSize, 3 * tileSize, 4 * tileSize);
         groundTiles.getSubImage(Icon.ATTACK.getImageCol(), Icon.ATTACK.getImageRow()).draw((xOffset + 24) * tileSize, (yOffset + 2) * tileSize);
         groundTiles.getSubImage(42 + (super.getAV() / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 2) * tileSize);
         groundTiles.getSubImage(42 + (super.getAV() % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 2) * tileSize);
-        g.fillRect((xOffset + 24) * tileSize, (yOffset + 4) * tileSize, 3 * tileSize, tileSize);
-        groundTiles.getSubImage(Icon.DEFENCE.getImageCol(), Icon.DEFENCE.getImageRow()).draw((xOffset + 24) * tileSize, (yOffset + 4) * tileSize);
-        groundTiles.getSubImage(42 + (super.getDV() / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 4) * tileSize);
-        groundTiles.getSubImage(42 + (super.getDV() % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 4) * tileSize);
-        g.fillRect((xOffset + 24) * tileSize, (yOffset + 6) * tileSize, 3 * tileSize, tileSize);
-        groundTiles.getSubImage(Icon.HITPOINTS.getImageCol(), Icon.HITPOINTS.getImageRow()).draw((xOffset + 24) * tileSize, (yOffset + 6) * tileSize);
-        groundTiles.getSubImage(42 + (super.getHP() / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 6) * tileSize);
-        groundTiles.getSubImage(42 + (super.getHP() % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 6) * tileSize);
+        //g.fillRect((xOffset + 24) * tileSize, (yOffset + 3) * tileSize, 3 * tileSize, tileSize);
+        groundTiles.getSubImage(Icon.DEFENCE.getImageCol(), Icon.DEFENCE.getImageRow()).draw((xOffset + 24) * tileSize, (yOffset + 3) * tileSize);
+        groundTiles.getSubImage(42 + (super.getDV() / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 3) * tileSize);
+        groundTiles.getSubImage(42 + (super.getDV() % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 3) * tileSize);
+        //g.fillRect((xOffset + 24) * tileSize, (yOffset + 4) * tileSize, 3 * tileSize, tileSize);
+        groundTiles.getSubImage(Icon.HITPOINTS.getImageCol(), Icon.HITPOINTS.getImageRow()).draw((xOffset + 24) * tileSize, (yOffset + 4) * tileSize);
+        groundTiles.getSubImage(42 + (super.getHP() / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 4) * tileSize);
+        groundTiles.getSubImage(42 + (super.getHP() % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 4) * tileSize);
+        groundTiles.getSubImage(Icon.FOOD.getImageCol(), Icon.FOOD.getImageRow()).draw((xOffset + 24) * tileSize, (yOffset + 5) * tileSize);
+        groundTiles.getSubImage(42 + (super.getFood() / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 5) * tileSize);
+        groundTiles.getSubImage(42 + (super.getFood() % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 5) * tileSize);
         
         g.fillRect((xOffset + 28) * tileSize, (yOffset + 2) * tileSize, 2 * tileSize, tileSize);
         groundTiles.getSubImage(Icon.HANDSLOT.getImageCol(), Icon.HANDSLOT.getImageRow()).draw((xOffset + 28) * tileSize, (yOffset + 2) * tileSize);
@@ -88,6 +99,9 @@ public class Player extends BaseEntity {
             }
         }
         
+        for (int i = 0; i < messages.size(); i++) {
+            g.drawString("" + messages.get(i), tileSize * (24 + xOffset), tileSize * (yOffset + 16 + i));
+        }
 
 
     }
@@ -148,6 +162,7 @@ public class Player extends BaseEntity {
             super.getWorld().worldInventory.add(dropItem);
             super.getInventry().remove(dropItem);
             super.getWorld().update();
+            message("player dropped " + System.getProperty("line.separator") + dropItem);
         }
     }
     
@@ -167,6 +182,7 @@ public class Player extends BaseEntity {
                 super.getInventry().add(super.getEquipment(2));          
                 super.setOffHand(equipItem);
             }
+            message("player equiped " + System.getProperty("line.separator") + equipItem.getName());
         }
     }
     
@@ -176,7 +192,19 @@ public class Player extends BaseEntity {
                 super.getInventry().remove(useItem);
                 Potion p = (Potion) useItem;
                 super.addEffect(p.getEffect());
-                p.getEffect().setBE(this);            
+                p.getEffect().setBE(this); 
+                message("player used " + System.getProperty("line.separator") + useItem.getName());
+            } else if (useItem != null && useItem.getClass().equals(Food.class)) {
+                super.getInventry().remove(useItem);
+                Food f = (Food) useItem;
+                super.modFood(f.getFoodValue());
+                message("player used " + System.getProperty("line.separator") + useItem.getName());
             }
+        
+    }
+    
+    public void message(String m) {
+        messages.add(m);
+        while(messages.size() > 6) messages.remove(0);
     }
 }

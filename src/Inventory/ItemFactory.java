@@ -21,76 +21,87 @@ public class ItemFactory {
     public ItemFactory(World world) {
         this.world = world;
     }
-    
-    public Item newTunic(int depth) {
-        Item tu = new Armour("Tunic", 36, 21, 0, "Plain tunic");
+     /*
+    public Armour newTunic(int depth) {
+        Armour tu = new Armour("Tunic", 36, 21, 0, "Plain tunic");
         world.putItemInClearTile(tu, depth);
+        return tu;
+    }*/
+    
+    public Armour newTunic() {
+        Armour tu = new Armour("Tunic", 36, 21, 0, "Plain tunic");
         return tu;
     }
     
-    public Item newLeatherArmour(int depth) {
+    /* Item newLeatherArmour(int depth) {
         Item la = new Armour("Leather Armour", 22, 21, 1, "Tough Leather +1 Defence");
         world.putItemInClearTile(la, depth);
         return la;
+    }*/
+    
+    public Armour newLeatherArmour() {
+        Armour la = new Armour("Leather Armour", 22, 21, 1, "Tough Leather +1 Defence");
+        return la;
     }
     
-    public Item newChainArmour(int depth) {
-        Item ca = new Armour("Chain Armour", 2, 21, 2, "Steel Chain +2 Defence");
-        world.putItemInClearTile(ca, depth);
+    
+    public Armour newChainArmour() {
+        Armour ca = new Armour("Chain Armour", 2, 21, 2, "Steel Chain +2 Defence");
         return ca;
     }
     
-    public Item newPlateArmour(int depth) {
-        Item pa = new Armour("Plate Armour", 32, 21, 3, "Solid Plate +3 Defence");
-        world.putItemInClearTile(pa, depth);
+    public Armour newPlateArmour() {
+        Armour pa = new Armour("Plate Armour", 32, 21, 3, "Solid Plate +3 Defence");
         return pa;
     }
     
-    public Item newShield(int depth) {
+    public Item newShield() {
         Item sh = new Item("Shield", 46, 22, "Thick wood, +1 Defence");
-        world.putItemInClearTile(sh, depth);
         return sh;
     }
     
-    public Item newDagger(int depth) {
-        Item dg = new Weapon("Dagger", 19, 29, 1, "+1 Attack");
-        world.putItemInClearTile(dg, depth);
+    public Weapon newDagger() {
+        Weapon dg = new Weapon("Dagger", 19, 29, 1, "+1 Attack");
         return dg;
     }
     
-    public Item newAxe(int depth) {
-        Item ax = new Weapon("Axe", 12, 28, 2, "+2 Attack");
-        world.putItemInClearTile(ax, depth);
+    public Weapon newAxe() {
+        Weapon ax = new Weapon("Axe", 12, 28, 2, "+2 Attack");
         return ax;
     }
     
-    public Item newSword(int depth) {
-        Item dg = new Weapon("Sword", 18, 29, 3, "+3 Attack");
-        world.putItemInClearTile(dg, depth);
+    public Weapon newSword() {
+        Weapon dg = new Weapon("Sword", 18, 29, 3, "+3 Attack");
         return dg;
     }
     
-    public Item newTorch(int depth) {
+    public Item newTorch() {
         Item tc = new Item("Torch", 57, 18, "Lights up area");
-        world.putItemInClearTile(tc, depth);
         return tc;
     }
     
-    public Item newBlackPotion(int depth) {
-        Item bp = new Potion("Black Potion", 28, 24, new ModAttack(null, 10, 2), "Strange black liquid");
-        world.putItemInClearTile(bp, depth);
+    public Potion newBlackPotion() {
+        Potion bp = new Potion("Black Potion", 28, 24, new ModAttack(null, 10, 2), "Strange black liquid");
         return bp;
     }
     
-    public Item newBluePotion(int depth) {
+    public Item newBluePotion() {
         Item bp = new Potion("Blue Potion", 29, 24, new ModDef(null, 10, 2), "Strange blue liquid");
-        world.putItemInClearTile(bp, depth);
         return bp;
     }
     
-    public Item newBrownPotion(int depth) {
+    public Item newBrownPotion() {
         Item bp = new Potion("Brown Potion", 30, 24, new ModHP(null, -1, 2), "Strange brown liquid");
-        world.putItemInClearTile(bp, depth);
         return bp;
+    }
+    
+    public Item newQuorn() {
+        Item q = new Food("Quorn", 37, 23, 10, "myconoid meat +10 food");
+        return q;
+    }
+    
+    public Item newLizMeat() {
+        Item q = new Food("Lizard Meat", 36, 23, 20, "lizard meat +20 food");
+        return q;
     }
 }

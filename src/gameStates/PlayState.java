@@ -13,6 +13,7 @@ import entities.BaseEntity;
 import entities.EntityFactory;
 import entityStates.IdleState;
 import inventory.Potion;
+import java.util.ArrayList;
 import java.util.List;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
@@ -43,7 +44,7 @@ public class PlayState extends BasicGameState {
     int screenHeightTiles;
     boolean showInfo;
 
-    List<String> messages;
+
     private Music music;
     private ItemFactory itemFactory;
     private EntityFactory entFactory;
@@ -67,16 +68,15 @@ public class PlayState extends BasicGameState {
         groundTiles = new SpriteSheet(ground, tileSize, tileSize);
         createWorld();
         showInfo = true;
+        
+
                
         gc.setShowFPS(false);
 
-        entFactory = new EntityFactory(world);
-        player = entFactory.newPlayer();
         itemFactory = new ItemFactory(world);
+        entFactory = new EntityFactory(world, itemFactory);
+        player = entFactory.newPlayer();
         
-        getPlayer().setEquipedArmour(new Armour("Tunic", 36, 21, 0, "Simple tunic"));
-        getPlayer().setEquipedWeapon(new Weapon("Dagger", 19, 29, 1, "+1 Attack"));
-        getPlayer().setOffHand(new Item("Torch", 57, 18, "Lights up Area"));
        
         xOffset = getScrollX();
         yOffset = getScrollY();
@@ -108,33 +108,33 @@ public class PlayState extends BasicGameState {
         entFactory.newManticore(world.getDepth() - 1, getPlayer());
 
         for (int i = 0; i < world.getDepth(); i++) {
-            itemFactory.newLeatherArmour(i);
-            itemFactory.newLeatherArmour(i);
-            itemFactory.newTunic(i);
-            itemFactory.newShield(i);
-            itemFactory.newShield(i);
-            itemFactory.newShield(i);
-            itemFactory.newDagger(i);
-            itemFactory.newAxe(i);
-            itemFactory.newSword(i);
-            itemFactory.newTorch(i);
-            itemFactory.newBlackPotion(i);
-            itemFactory.newBlackPotion(i);
-            itemFactory.newBlackPotion(i);
-            itemFactory.newBluePotion(i);
-            itemFactory.newBluePotion(i);
-            itemFactory.newBluePotion(i);
-            itemFactory.newBrownPotion(i);
-            itemFactory.newBrownPotion(i);
-            itemFactory.newBrownPotion(i);
+            world.putItemInClearTile(getItemFactory().newLeatherArmour(), i);
+            world.putItemInClearTile(getItemFactory().newLeatherArmour(), i);//getItemFactory().newLeatherArmour(i);
+            world.putItemInClearTile(getItemFactory().newTunic(), i); //getItemFactory().newTunic();
+            world.putItemInClearTile(getItemFactory().newShield(), i);
+            world.putItemInClearTile(getItemFactory().newShield(), i);
+            world.putItemInClearTile(getItemFactory().newShield(), i);
+            world.putItemInClearTile(getItemFactory().newDagger(), i);
+            world.putItemInClearTile(getItemFactory().newAxe(), i);
+            world.putItemInClearTile(getItemFactory().newSword(), i);
+            world.putItemInClearTile(getItemFactory().newTorch(), i);
+            world.putItemInClearTile(getItemFactory().newBlackPotion(), i);
+            world.putItemInClearTile(getItemFactory().newBlackPotion(), i);
+            world.putItemInClearTile(getItemFactory().newBlackPotion(), i);
+            world.putItemInClearTile(getItemFactory().newBluePotion(), i);
+            world.putItemInClearTile(getItemFactory().newBluePotion(), i);
+            world.putItemInClearTile(getItemFactory().newBluePotion(), i);
+            world.putItemInClearTile(getItemFactory().newBrownPotion(), i);
+            world.putItemInClearTile(getItemFactory().newBrownPotion(), i);
+            world.putItemInClearTile(getItemFactory().newBrownPotion(), i);
             if (Math.random() < i / 2f) {
-                itemFactory.newLeatherArmour(i);
+                world.putItemInClearTile(getItemFactory().newLeatherArmour(), i);
             }
             if (Math.random() < i / 5f) {
-                itemFactory.newChainArmour(i);
+                world.putItemInClearTile(getItemFactory().newChainArmour(), i);
             }
             if (Math.random() < i / 10f) {
-                itemFactory.newPlateArmour(i);
+                world.putItemInClearTile(getItemFactory().newPlateArmour(), i);
             }
         }
     }
@@ -181,6 +181,8 @@ public class PlayState extends BasicGameState {
         getPlayer().playerUI(g, z, xOffset, yOffset, groundTiles, tileSize, screenWidthTiles, screenHeightTiles);
         
         g.setColor(Color.white);
+        
+        /*
         g.drawString("Play State FPS: " + gc.getFPS(), tileSize * (24 + xOffset), (yOffset + 16) * tileSize);
         g.drawString("Press Escape to lose", tileSize * (24 + xOffset), (yOffset + 17) * tileSize);
         //g.drawString("Press Enter to win", tileSize * (24 + xOffset), (yOffset + 18) * tileSize);
@@ -192,7 +194,7 @@ public class PlayState extends BasicGameState {
                 g.drawString("boss : " + be.getPosX() + " y: " + be.getPosY() + " z: " + be.getPosZ(), tileSize * (24 + xOffset), (yOffset + 21) * tileSize);
             }
         }
-        
+        */
         if(showInfo) {
             renderInfo(g);
         }
@@ -278,8 +280,12 @@ public class PlayState extends BasicGameState {
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD5)) {
             if (world.tile(getPlayer().getPosZ(), getPlayer().getPosX(), getPlayer().getPosY()) == Tile.STAIRSUP) {
                 getPlayer().moveBy(-1, 0, 0);
+                world.getPlayer().message("played went upstairs");
             } else if (world.tile(getPlayer().getPosZ(), getPlayer().getPosX(), getPlayer().getPosY()) == Tile.STAIRSDOWN) {
                 getPlayer().moveBy(1, 0, 0);
+                world.getPlayer().message("played went downstairs");
+            } else {
+                world.getPlayer().message("played waits a turn");
             }
             world.update();
         }
@@ -289,6 +295,8 @@ public class PlayState extends BasicGameState {
                 world.worldInventory.remove(pickupItem);
                 getPlayer().getInventry().add(pickupItem);
                 world.update();
+                world.getPlayer().message("played picked up ");
+                world.getPlayer().message(pickupItem.getName());
             }
         }
         if (gc.getInput().isKeyPressed(Input.KEY_D)) {
@@ -299,14 +307,6 @@ public class PlayState extends BasicGameState {
         }
         if (gc.getInput().isKeyPressed(Input.KEY_U)) {
             getPlayer().use();
-            /*Item useItem = super.getInventry().get((selectY * 5) + selectX);
-            if (useItem != null && useItem.getClass().equals(Potion.class)) {
-                player.getInventry().remove(useItem);
-                Potion p = (Potion) useItem;
-                player.addEffect(p.getEffect());
-                p.getEffect().setBE(player);
-                world.update();
-            }*/
         }
         if (gc.getInput().isKeyPressed(Input.KEY_I)) {
             showInfo = !showInfo;
@@ -324,8 +324,8 @@ public class PlayState extends BasicGameState {
         g.setColor(Color.yellow);
         g.drawString("Attack Value", (xOffset + 24) * tileSize, (yOffset + 1) * tileSize + tileSize/2);
         g.drawString("Equipped Items", (xOffset + 28) * tileSize, (yOffset + 1) * tileSize + tileSize/2);
-        g.drawString("Defence Value", (xOffset + 24) * tileSize, (yOffset + 3) * tileSize + tileSize/2);
-        g.drawString("Hit Points", (xOffset + 24) * tileSize, (yOffset + 5) * tileSize + tileSize/2);
+        g.drawString("Defence Value", (xOffset + 24) * tileSize, (yOffset + 2) * tileSize + tileSize/2);
+        g.drawString("Hit Points", (xOffset + 24) * tileSize, (yOffset + 3) * tileSize + tileSize/2);
         g.drawString("Inventory", (xOffset + 24) * tileSize, (yOffset + 7) * tileSize + tileSize/2);
         g.drawString("Examine", (xOffset + 24) * tileSize, (yOffset + 12) * tileSize + tileSize/2);
         g.setColor(Color.white);
@@ -350,5 +350,12 @@ public class PlayState extends BasicGameState {
      */
     public BaseEntity getPlayer() {
         return player;
+    }
+
+    /**
+     * @return the itemFactory
+     */
+    public ItemFactory getItemFactory() {
+        return itemFactory;
     }
 }
