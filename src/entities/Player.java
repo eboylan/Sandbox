@@ -24,18 +24,23 @@ import world.World;
  */
 public class Player extends BaseEntity {
 
-    private int selectX;
-    private int selectY;
+    private int selectX, selectY;
     List<String> messages;
+    boolean showCraft;
+    private int craftX, craftY;
+    
 
     public Player(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) throws SlickException {
         super(type, w, ic, ir, av, dv, hp, vr);
         selectX = 0;
         selectY = 0;
+        craftX = 0;
+        craftY = 0;
         messages = new ArrayList<>();
         messages.add("I'm a message box");
         messages.add("I show messages");
         messages.add("this is a message");
+        showCraft = false;
     }
 
     public void playerUI(Graphics g, int z, int xOffset, int yOffset, SpriteSheet groundTiles, int tileSize, int screenWidthTiles, int screenHeightTiles) {
@@ -85,6 +90,7 @@ public class Player extends BaseEntity {
         }
         groundTiles.getSubImage(Icon.SELECTBOX.getImageCol(), Icon.SELECTBOX.getImageRow()).draw(tileSize * (getSelectX() + xOffset + 25), tileSize * (getSelectY() + yOffset + 8));
 
+        if (showCraft) groundTiles.getSubImage(Icon.CRAFTSELECT.getImageCol(), Icon.CRAFTSELECT.getImageRow()).draw(tileSize * (getCraftX() + xOffset + 25), tileSize * (getCraftY() + yOffset + 8));
         g.fillRect((xOffset + 24) * tileSize, (yOffset + 13) * tileSize, 7 * tileSize, 2 * tileSize);
         
         g.fillRect((xOffset + 24) * tileSize, (yOffset + 16) * tileSize, 7 * tileSize, 6 * tileSize);
@@ -133,7 +139,7 @@ public class Player extends BaseEntity {
             selectY = 3;
         }
     }
-
+    
     /**
      * @return the selectX
      */
@@ -146,6 +152,48 @@ public class Player extends BaseEntity {
      */
     public int getSelectY() {
         return selectY;
+    }
+    
+        /**
+     * @param craftX the selectX to set
+     */
+    @Override
+    public void setCraftX(int x) {
+        craftX += x;
+        if (getCraftX() < 0) {
+            craftX = 0;
+        }
+        if (getCraftX() > 4) {
+            craftX = 4;
+        }
+    }
+
+    /**
+     * @param craftY the selectY to set
+     */
+    @Override
+    public void setCraftY(int y) {
+        craftY += y;
+        if (getCraftY() < 0) {
+            craftY = 0;
+        }
+        if (getCraftY() > 3) {
+            craftY = 3;
+        }
+    }
+    
+    /**
+     * @return the craftX
+     */
+    public int getCraftX() {
+        return craftX;
+    }
+
+    /**
+     * @return the craftY
+     */
+    public int getCraftY() {
+        return craftY;
     }
     
     @Override
@@ -205,6 +253,14 @@ public class Player extends BaseEntity {
     
     public void message(String m) {
         messages.add(m);
-        while(messages.size() > 6) messages.remove(0);
+        while(messages.size() > 10) messages.remove(0);
+    }
+    
+    public void setShowCraft(boolean sc) {
+        showCraft = sc;
+    }
+    
+    public boolean isShowCraft() {
+        return showCraft;
     }
 }

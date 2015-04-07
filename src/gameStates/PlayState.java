@@ -11,7 +11,9 @@ import inventory.ItemFactory;
 import inventory.Weapon;
 import entities.BaseEntity;
 import entities.EntityFactory;
+import entities.Player;
 import entityStates.IdleState;
+import inventory.CraftItem;
 import inventory.Potion;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +40,13 @@ public class PlayState extends BasicGameState {
     SpriteSheet groundTiles;
     int xOffset;
     int yOffset;
-    private BaseEntity player;
+    private Player player;
+    CraftItem craftItem;
     int tileSize;
     int screenWidthTiles;
     int screenHeightTiles;
     boolean showInfo;
-
+    
 
     private Music music;
     private ItemFactory itemFactory;
@@ -59,6 +62,8 @@ public class PlayState extends BasicGameState {
         tileSize = 32;
         screenWidthTiles = 32 - 9;
         screenHeightTiles = 23;
+        
+        
         //stopRunFrame = 0;
         
         ground = new Image("data/DungeonCrawl_ProjectUtumnoTileset.png");
@@ -76,6 +81,7 @@ public class PlayState extends BasicGameState {
         itemFactory = new ItemFactory(world);
         entFactory = new EntityFactory(world, itemFactory);
         player = entFactory.newPlayer();
+        craftItem = new CraftItem(itemFactory);
         
        
         xOffset = getScrollX();
@@ -212,16 +218,32 @@ public class PlayState extends BasicGameState {
             sbg.enterState(2);
         }
         if (gc.getInput().isKeyPressed(Input.KEY_RIGHT) || gc.getInput().isKeyPressed(Input.KEY_MULTIPLY)) {
-            getPlayer().setSelectX(1);
+            if (player.isShowCraft()) {
+                getPlayer().setCraftX(1);
+            } else {
+                getPlayer().setSelectX(1);
+            }
         }
         if (gc.getInput().isKeyPressed(Input.KEY_LEFT) || gc.getInput().isKeyPressed(Input.KEY_DIVIDE)) {
-            getPlayer().setSelectX(-1);
+            if (player.isShowCraft()) {
+                getPlayer().setCraftX(-1);
+            } else {
+                getPlayer().setSelectX(-1);
+            }
         } 
         if (gc.getInput().isKeyPressed(Input.KEY_UP) || gc.getInput().isKeyPressed(Input.KEY_SUBTRACT)) {
-            getPlayer().setSelectY(-1);
+            if (player.isShowCraft()) {
+                getPlayer().setCraftY(-1);
+            } else {
+                getPlayer().setSelectY(-1);
+            }
         }
         if (gc.getInput().isKeyPressed(Input.KEY_DOWN) || gc.getInput().isKeyPressed(Input.KEY_ADD)) {
-            getPlayer().setSelectY(1);
+            if (player.isShowCraft()) {
+                getPlayer().setCraftY(1);
+            } else {
+                getPlayer().setSelectY(1);
+            }
         }
         
         if (true) {//player.isIdle()) {
@@ -310,6 +332,21 @@ public class PlayState extends BasicGameState {
         }
         if (gc.getInput().isKeyPressed(Input.KEY_I)) {
             showInfo = !showInfo;
+        }
+        if (gc.getInput().isKeyPressed(Input.KEY_C)) {
+            if(player.isShowCraft()) {
+                Item i1 = player.getInventry().get((player.getSelectY() * 5) + player.getSelectX());
+                Item i2 = player.getInventry().get((player.getCraftY() * 5) + player.getCraftX());
+                if (i1 == null || i2 == null) {
+                    player.setShowCraft(false);
+                } else {
+                   getPlayer().getInventry().remove(i1); 
+                   getPlayer().getInventry().remove(i2);
+                   getPlayer().getInventry().add(craftItem.craft(i1, i2));
+                }
+            } else {
+                player.setShowCraft(true); 
+            }
         }
         
         if (getPlayer().getHP() < 1) {

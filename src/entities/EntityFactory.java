@@ -26,8 +26,8 @@ public class EntityFactory {
         this.itemFactory = iFact;
     }
     
-    public BaseEntity newPlayer() throws SlickException {
-        BaseEntity player = new Player("player", world, 4, 2, 6, 2, 12, 6);
+    public Player newPlayer() throws SlickException {
+        Player player = new Player("player", world, 4, 2, 6, 2, 12, 6);
         world.putInClearTile(player, 0);
         new EntityAI(player);
         player.setEquipedArmour(itemFactory.newTunic());

@@ -17,6 +17,7 @@ public enum Icon {
     SELECTBOX(10, 0),
     UIBORDER(31, 17),
     CHEST(43, 45),
+    CRAFTSELECT(8, 0),
     ARMOURSLOT(7, 1),
     HANDSLOT(12, 21);
     

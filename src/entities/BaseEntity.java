@@ -386,6 +386,14 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
     public void setSelectY(int i) {
         //leave for player
     }
+    
+    public void setCraftX(int i) {
+        //leave for player
+    }
+
+    public void setCraftY(int i) {
+        //leave for player
+    }
 
     public void drop() {
         for (int i = 0; i < inventory.length(); i++) {
@@ -550,7 +558,7 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
         //leave for player
     }
 
-    void inventoryAdd(Item i) {
+    public void inventoryAdd(Item i) {
         inventory.add(i);
     }
 }

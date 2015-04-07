@@ -60,6 +60,11 @@ public class ItemFactory {
         return sh;
     }
     
+    public Item newMess() {
+        Item m = new Item("Runined Mess", 6, 30, "Useless item");
+        return m;
+    }
+    
     public Weapon newDagger() {
         Weapon dg = new Weapon("Dagger", 19, 29, 1, "+1 Attack");
         return dg;
@@ -85,23 +90,33 @@ public class ItemFactory {
         return bp;
     }
     
-    public Item newBluePotion() {
-        Item bp = new Potion("Blue Potion", 29, 24, new ModDef(null, 10, 2), "Strange blue liquid");
+    public Potion newBluePotion() {
+        Potion bp = new Potion("Blue Potion", 29, 24, new ModDef(null, 10, 2), "Strange blue liquid");
         return bp;
     }
     
-    public Item newBrownPotion() {
-        Item bp = new Potion("Brown Potion", 30, 24, new ModHP(null, -1, 2), "Strange brown liquid");
+    public Potion newBrownPotion() {
+        Potion bp = new Potion("Brown Potion", 30, 24, new ModHP(null, -1, 2), "Strange brown liquid");
         return bp;
     }
     
-    public Item newQuorn() {
-        Item q = new Food("Quorn", 37, 23, 10, "myconoid meat +10 food");
+    public Food newQuorn() {
+        Food q = new Food("Quorn", 37, 23, 10, "myconoid meat +10 food");
         return q;
     }
     
-    public Item newLizMeat() {
-        Item q = new Food("Lizard Meat", 36, 23, 20, "lizard meat +20 food");
+    public Food newLizMeat() {
+        Food q = new Food("Lizard Meat", 36, 23, 20, "lizard meat +20 food");
         return q;
+    }
+    
+    public Food newCookedQuorn() {
+        Food cq = new Food("Cooked Quorn", 43, 23, 20, "cooked quorn +20 food;");
+        return cq;
+    }
+    
+    public Food newCookedLizMeat() {
+        Food clm = new Food("Cooked Meat", 43, 23, 40, "cooked meat +40 food;");
+        return clm;
     }
 }
