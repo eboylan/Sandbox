@@ -14,22 +14,22 @@ import util.Point;
  */
 public class HuntingMonsterAI extends EntityAI {
 
-    BaseEntity target;
+    Actor target;
 
-    public HuntingMonsterAI(BaseEntity be, BaseEntity player) {
+    public HuntingMonsterAI(Actor be, Actor player) {
         super(be);
         this.target = player;
     }
 
     public void onUpdate() {
-        if (be.canSeeLit(target.getPosZ(), target.getPosX(), target.getPosY()) || be.canSeeDim(target.getPosZ(), target.getPosX(), target.getPosY()) && target.getEquipment(2).equals("torch")) {
+        if (be.canSeeLit(target.getPosZ(), target.getPosX(), target.getPosY()) || be.canSeeDim(target.getPosZ(), target.getPosX(), target.getPosY()) && target.getEquipment(2).getName().equals("torch")) {
             hunt(target);
         } else {
             wander();
         }
     }
 
-    public void hunt(BaseEntity target) {
+    public void hunt(Actor target) {
         List<Point> points;
         points = new Path(be, target.getPosX(), target.getPosY()).points();
 

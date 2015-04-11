@@ -4,17 +4,17 @@
  */
 package entityEffects;
 
-import entities.BaseEntity;
+import entities.Actor;
 
 /**
  *
  * @author Emmet
  */
 public class Regenerate implements Effect{
-    private BaseEntity be;
+    private Actor be;
     private long duration;
     
-    public Regenerate(BaseEntity be, long l) {
+    public Regenerate(Actor be, long l) {
         this.be = be;
         this.duration = l;
     }
@@ -30,7 +30,7 @@ public class Regenerate implements Effect{
         }       
     }
     
-    public void setBE(BaseEntity be) {
+    public void setBE(Actor be) {
         this.be = be;
         if (duration > 0) {
             this.duration += be.getFcount();

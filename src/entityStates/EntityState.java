@@ -4,7 +4,7 @@
  */
 package entityStates;
 
-import entities.BaseEntity;
+import entities.Actor;
 
 /**
  *
@@ -21,5 +21,5 @@ public interface EntityState {
     
     public void start();
 
-    public void setTarget(BaseEntity target);
+    public void setTarget(Actor target);
 }

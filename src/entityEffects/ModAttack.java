@@ -4,24 +4,24 @@
  */
 package entityEffects;
 
-import entities.BaseEntity;
+import entities.Actor;
 
 /**
  *
  * @author Emmet
  */
 public class ModAttack implements Effect{
-    private BaseEntity be;
+    private Actor be;
     private long duration;
     private int mod;
     
-    public ModAttack(BaseEntity be, long l, int i) {
+    public ModAttack(Actor be, long l, int i) {
         this.be = be;
         this.duration = l;
         this.mod = i;
     }
     
-    public void setBE(BaseEntity be) {
+    public void setBE(Actor be) {
         this.be = be;
         be.effectAttack(mod);
         if (duration > 0) {

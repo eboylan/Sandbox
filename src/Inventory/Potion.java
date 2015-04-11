@@ -4,7 +4,7 @@
  */
 package inventory;
 
-import entities.BaseEntity;
+import entities.Actor;
 import entityEffects.Effect;
 
 /**

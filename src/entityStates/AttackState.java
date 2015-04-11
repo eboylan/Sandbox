@@ -4,7 +4,8 @@
  */
 package entityStates;
 
-import entities.BaseEntity;
+import entities.Actor;
+import entities.Player;
 import org.newdawn.slick.Animation;
 
 /**
@@ -15,11 +16,11 @@ public class AttackState implements EntityState {
     
     Animation a;
     int i;        
-    private BaseEntity be;
-    private BaseEntity target;
+    private Actor be;
+    private Actor target;
     int stopFrame;
 
-    public AttackState(BaseEntity be, Animation a, int i) {
+    public AttackState(Actor be, Animation a, int i) {
         this.be = be;
         this.a = a;
         this.i = i;
@@ -28,12 +29,16 @@ public class AttackState implements EntityState {
 
     @Override
     public void render() {
+        synchronized(this) {
         a.stopAt(stopFrame);
-        a.draw(32 * be.getPosX() - (70 - 16), 32 * be.getPosY() - (70 - 8));
+        a.draw(32 * be.getPosX() - (a.getWidth() / 2 - 16), 32 * be.getPosY() - (a.getHeight() / 2 - 8));
         if (a.isStopped()) {
             be.attack(target);
             be.setIdle();
-            be.getWorld().update();
+            if (be.getClass().equals(Player.class)) {
+                be.getWorld().update();
+            }
+        }
         }
     }
     
@@ -53,7 +58,7 @@ public class AttackState implements EntityState {
         a.start();
     }
     
-    public void setTarget(BaseEntity t) {
+    public void setTarget(Actor t) {
         target = t;
     }
 }

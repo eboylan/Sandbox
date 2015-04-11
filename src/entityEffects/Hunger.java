@@ -4,17 +4,17 @@
  */
 package entityEffects;
 
-import entities.BaseEntity;
+import entities.Actor;
 
 /**
  *
  * @author Emmet
  */
 public class Hunger implements Effect{
-    private BaseEntity be;
+    private Actor be;
     private long duration;
     
-    public Hunger(BaseEntity be, long l) {
+    public Hunger(Actor be, long l) {
         this.be = be;
         this.duration = l;
     }
@@ -26,14 +26,16 @@ public class Hunger implements Effect{
             be.removeEffect(this);
         }
         if(be.getFcount() % 10 == 0) {
-            be.modFood(-1);
+            if(be.getFood() > 0) {
+                be.modFood(-1);
+            }
             if(be.getFood() < 1) {
                 be.modHP(-1);
             }           
         }       
     }
 
-    public void setBE(BaseEntity be) {
+    public void setBE(Actor be) {
         this.be = be;
         if (duration > 0) {
             this.duration += be.getFcount();

@@ -4,7 +4,7 @@
  */
 package entityStates;
 
-import entities.BaseEntity;
+import entities.Actor;
 import org.newdawn.slick.Animation;
 
 /**
@@ -12,12 +12,12 @@ import org.newdawn.slick.Animation;
  * @author Emmet
  */
 public class DeathState implements EntityState {
-    private final BaseEntity be;
+    private final Actor be;
     private final Animation a;
     private final int i;
     private final int stopFrame;
     
-    public DeathState(BaseEntity be, Animation a, int i) {
+    public DeathState(Actor be, Animation a, int i) {
        this.be = be;
        this.a = a;
        this.i = i;
@@ -27,7 +27,7 @@ public class DeathState implements EntityState {
     @Override
     public void render() {
         a.stopAt(stopFrame);
-        a.draw((32 * be.getPosX() - (a.getWidth()/2 - 16)), (32 * be.getPosY() - (a.getHeight()/2 + 32)));
+        a.draw((32 * be.getPosX() - (a.getWidth()/2 - 16)), (32 * be.getPosY() - (a.getHeight()/2 - 8)));
         if (a.isStopped()) {
             be.kill();
         }
@@ -50,7 +50,7 @@ public class DeathState implements EntityState {
     }
 
     @Override
-    public void setTarget(BaseEntity target) {
+    public void setTarget(Actor target) {
         //throw new UnsupportedOperationException("Not supported yet.");
     }
     

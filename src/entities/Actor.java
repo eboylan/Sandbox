@@ -13,6 +13,7 @@ import entityStates.*;
 import inventory.Armour;
 import inventory.Food;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
@@ -27,7 +28,7 @@ import world.World;
  *
  * @author Emmet
  */
-public class BaseEntity implements EntityState, Comparable<BaseEntity> {
+public class Actor implements EntityState, Comparable<Actor> {
     //name
     private String type;
     
@@ -78,7 +79,7 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
     private final Animation die;
     
     
-    public BaseEntity(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) throws SlickException {
+    public Actor(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) throws SlickException {
         this.type = type;
         this.world = w;
         this.imageCol = ic;
@@ -106,7 +107,7 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
             att3Sheet = new SpriteSheet("data/Hero/HeroAttackC.png", 140, 140);
             idleSheet = new SpriteSheet("data/Hero/HeroFidget.png", 140, 140);
             deathSheet = new SpriteSheet("data/Hero/HeroDeath.png", 140, 140);
-            run = new Animation(runSheet, 45);
+            run = new Animation(runSheet, 90);
             att1 = new Animation(att1Sheet, 90);
             att2 = new Animation(att2Sheet, 90);
             att3 = new Animation(att3Sheet, 90);
@@ -197,7 +198,7 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
     }
     
     public void moveBy(int z, int x, int y) {
-        BaseEntity target = getWorld().isEntityAt(posZ + z, posX + x, posY + y);
+        Actor target = getWorld().isEntityAt(posZ + z, posX + x, posY + y);
         if (x < 0 && y < 0) {
             setFacing(6);
         }
@@ -241,16 +242,17 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
             
             
         } else {
-            attack(target);
-            //setAttack(target);
+            //attack(target);
+            setAttack(target);
         }
     }
     
-    public void attack(BaseEntity target) {
+    public void attack(Actor target) {
         int dmg = Math.max(0, getAV() - target.getDV());
         dmg = (int) (Math.random() * dmg + 1);
         if (this.type.equals("player") || target.type.equals("player")) {
-            world.getPlayer().message(this.type + " attacks " + target.type+ System.getProperty("line.separator") + " for " + dmg + " damage");
+            world.getPlayer().message(this.type + " attacks " + target.getType());
+            world.getPlayer().message(" for " + dmg + " damage");
         }
         target.modHP(-dmg);
     }
@@ -420,26 +422,26 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
     @Override
     public void render() {
         getEntState().render();
-        //run.stopAt(stopRunFrame);
+        //run.stopAt(15);
         //run.draw(tileSize * this.getPosX() - (70 - 16), tileSize * this.getPosY() - (70 + 32));
     }
 
 
     public void setIdle() {
         entState = animationStates[0]; 
-        start();
+        entState.start();
     }
 
     public void setMove() {
         entState = animationStates[4]; 
-        start();
+        entState.start();
     }
 
-    public void setAttack(BaseEntity target) {
-        int x = (int)Math.random() * 3;
-        entState = animationStates[x];
+    public void setAttack(Actor target) {
+        //int x = ((int)Math.random() * 3)  + 1;
+        entState = animationStates[3];
         entState.setTarget(target);
-        start();
+        entState.start();
     }
 
     /**
@@ -467,7 +469,7 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
      * @param entState the entState to set
      */
     public void setEntState(EntityState entState) {
-        this.entState = entState;
+        entState = entState;
     }
     
     public boolean isIdle() {
@@ -490,7 +492,7 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
     }
 
     @Override
-    public int compareTo(BaseEntity be) {
+    public int compareTo(Actor be) {
         int y = be.getPosY();
         return y - this.posY;
         //throw new UnsupportedOperationException("Not supported yet.");
@@ -512,7 +514,7 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
     }
 
     @Override
-    public void setTarget(BaseEntity target) {
+    public void setTarget(Actor target) {
         entState.setTarget(target);
     }
 
@@ -560,5 +562,26 @@ public class BaseEntity implements EntityState, Comparable<BaseEntity> {
 
     public void inventoryAdd(Item i) {
         inventory.add(i);
+    }
+    
+    public Point searchForFood(int range) {
+        ArrayList<Food> food = new ArrayList<>();
+        for (int i = 0; i < range; i++) {
+            if (i > -1 && i < world.getWidth()) {
+                for (int j = 0; j < range; j++) {
+                    if (j > -1 && j < world.getHeight()) {
+                       Item item = world.isItemAt(posZ, posX + i, posY + j);
+                       if(item.getClass().equals(Food.class)) food.add((Food)item);
+                    }
+                }
+            }
+        }
+        Collections.shuffle(food);
+        Food f = food.get(0);
+        if (f != null) {
+            Point p = new Point(f.getPosZ(), f.getPosX(), f.getPosY());
+            return p;
+        }
+        return null;
     }
 }

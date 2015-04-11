@@ -4,7 +4,7 @@
  */
 package util;
 
-import entities.BaseEntity;
+import entities.Actor;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ public class Path {
   private List<Point> points;
   public List<Point> points() { return points; }
 
-  public Path(BaseEntity be, int x, int y){
+  public Path(Actor be, int x, int y){
       points = pf.findPath(be, 
                            new Point(be.getPosZ(), be.getPosX(), be.getPosY()), 
                            new Point(be.getPosZ(), x, y), 

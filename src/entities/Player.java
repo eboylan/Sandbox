@@ -5,6 +5,7 @@
 package entities;
 
 import inventory.Armour;
+import inventory.CraftItem;
 import inventory.Food;
 import inventory.Icon;
 import inventory.Item;
@@ -22,7 +23,7 @@ import world.World;
  *
  * @author Emmet
  */
-public class Player extends BaseEntity {
+public class Player extends Actor {
 
     private int selectX, selectY;
     List<String> messages;
@@ -37,9 +38,6 @@ public class Player extends BaseEntity {
         craftX = 0;
         craftY = 0;
         messages = new ArrayList<>();
-        messages.add("I'm a message box");
-        messages.add("I show messages");
-        messages.add("this is a message");
         showCraft = false;
     }
 
@@ -65,6 +63,7 @@ public class Player extends BaseEntity {
         groundTiles.getSubImage(Icon.FOOD.getImageCol(), Icon.FOOD.getImageRow()).draw((xOffset + 24) * tileSize, (yOffset + 5) * tileSize);
         groundTiles.getSubImage(42 + (super.getFood() / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 5) * tileSize);
         groundTiles.getSubImage(42 + (super.getFood() % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 5) * tileSize);
+        
         
         g.fillRect((xOffset + 28) * tileSize, (yOffset + 2) * tileSize, 2 * tileSize, tileSize);
         groundTiles.getSubImage(Icon.HANDSLOT.getImageCol(), Icon.HANDSLOT.getImageRow()).draw((xOffset + 28) * tileSize, (yOffset + 2) * tileSize);
@@ -106,7 +105,7 @@ public class Player extends BaseEntity {
         }
         
         for (int i = 0; i < messages.size(); i++) {
-            g.drawString("" + messages.get(i), tileSize * (24 + xOffset), tileSize * (yOffset + 16 + i));
+            //g.drawString("" + messages.get(i), tileSize * (24 + xOffset), tileSize * (yOffset + 16) +  (i * tileSize/2));
         }
 
 
@@ -210,7 +209,8 @@ public class Player extends BaseEntity {
             super.getWorld().worldInventory.add(dropItem);
             super.getInventry().remove(dropItem);
             super.getWorld().update();
-            message("player dropped " + System.getProperty("line.separator") + dropItem);
+            message("player dropped ");
+            message(dropItem.getName());
         }
     }
     
@@ -230,7 +230,8 @@ public class Player extends BaseEntity {
                 super.getInventry().add(super.getEquipment(2));          
                 super.setOffHand(equipItem);
             }
-            message("player equiped " + System.getProperty("line.separator") + equipItem.getName());
+            message("player equiped ");
+            message(equipItem.getName());
         }
     }
     
@@ -241,12 +242,14 @@ public class Player extends BaseEntity {
                 Potion p = (Potion) useItem;
                 super.addEffect(p.getEffect());
                 p.getEffect().setBE(this); 
-                message("player used " + System.getProperty("line.separator") + useItem.getName());
+                message("player used "); 
+                message(useItem.getName());
             } else if (useItem != null && useItem.getClass().equals(Food.class)) {
                 super.getInventry().remove(useItem);
                 Food f = (Food) useItem;
                 super.modFood(f.getFoodValue());
-                message("player used " + System.getProperty("line.separator") + useItem.getName());
+                message("player used "); 
+                message(useItem.getName());
             }
         
     }
@@ -262,5 +265,22 @@ public class Player extends BaseEntity {
     
     public boolean isShowCraft() {
         return showCraft;
+    }
+
+    public void craft(CraftItem craftItem) {
+        if(showCraft) {
+                Item i1 = getInventry().get((getSelectY() * 5) + getSelectX());
+                Item i2 = getInventry().get((getCraftY() * 5) + getCraftX());
+                if (i1 == null || i2 == null) {
+                    showCraft = false;
+                } else {
+                   getInventry().remove(i1); 
+                   getInventry().remove(i2);
+                   getInventry().add(craftItem.craft(i1, i2));
+                  setShowCraft(false);
+                }
+            } else {
+                showCraft = true; 
+            }
     }
 }

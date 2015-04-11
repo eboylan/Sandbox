@@ -4,7 +4,7 @@
  */
 package entityEffects;
 
-import entities.BaseEntity;
+import entities.Actor;
 
 /**
  *
@@ -13,6 +13,6 @@ import entities.BaseEntity;
 public interface Effect {
     public void update();
 
-    public void setBE(BaseEntity player);
+    public void setBE(Actor player);
     
 }

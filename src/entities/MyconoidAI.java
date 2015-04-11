@@ -17,7 +17,7 @@ public class MyconoidAI extends EntityAI {
     private int spreadcount;
     private boolean spawn;
  
-    public MyconoidAI(BaseEntity be, EntityFactory entFactory, boolean spawn) {
+    public MyconoidAI(Actor be, EntityFactory entFactory, boolean spawn) {
         super(be);
         this.entFactory = entFactory;
         this.spawn = spawn;
@@ -46,7 +46,7 @@ public class MyconoidAI extends EntityAI {
             return;
         }
   
-        BaseEntity child = entFactory.newMyconoid(false, z);
+        Actor child = entFactory.newMyconoid(false, z);
         child.setPos(z, x, y);
         spreadcount++;
     }

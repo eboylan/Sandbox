@@ -8,7 +8,7 @@ package util;
  *
  * @author Emmet
  */
-import entities.BaseEntity;
+import entities.Actor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,7 +49,7 @@ public class Pathfinder {
              totalCost.remove(child);
        }
 
-       public ArrayList<Point> findPath(BaseEntity be, Point start, Point end, int maxTries) {
+       public ArrayList<Point> findPath(Actor be, Point start, Point end, int maxTries) {
              open.clear();
              closed.clear();
              parents.clear();
@@ -83,7 +83,7 @@ public class Pathfinder {
             return closest;
         }
 
-        private void checkNeighbors(BaseEntity be, Point end, Point closest) {
+        private void checkNeighbors(Actor be, Point end, Point closest) {
             for (Point neighbor : closest.neighbors8()) {
                 if (closed.contains(neighbor)
                  || !be.canEnter(be.getPosZ(), neighbor.x, neighbor.y)

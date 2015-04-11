@@ -5,7 +5,7 @@
 package world;
 
 import inventory.Item;
-import entities.BaseEntity;
+import entities.Actor;
 import entities.Player;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +23,7 @@ public class World {
     private int depth;
     private int height;
     private int width;
-    public CopyOnWriteArrayList<BaseEntity> entities;
+    public CopyOnWriteArrayList<Actor> entities;
     public List<Item> worldInventory;
     private boolean won = false;
 
@@ -72,8 +72,8 @@ public class World {
         return tiles[z][x][y].getImageRow();
     }
 
-    public BaseEntity isEntityAt(int z, int x, int y) {
-        for (BaseEntity be : entities) {
+    public Actor isEntityAt(int z, int x, int y) {
+        for (Actor be : entities) {
             if (be.getPosZ() == z && be.getPosX() == x && be.getPosY() == y) {
                 return be;
             }
@@ -90,7 +90,7 @@ public class World {
         return null;
     }
 
-    public void putInClearTile(BaseEntity be, int z) {
+    public void putInClearTile(Actor be, int z) {
         int x;
         int y;
 
@@ -102,14 +102,14 @@ public class World {
         entities.add(be);
     }
     
-    public void remove(BaseEntity target) {
+    public void remove(Actor target) {
         entities.remove(target);
     }
 
     public void update() {
-        List<BaseEntity> toUpdate = new ArrayList<>(entities);
-        Collections.sort(toUpdate);
-            for (BaseEntity be : toUpdate){
+        List<Actor> toUpdate = new ArrayList<>(entities);
+        //Collections.sort(toUpdate);
+            for (Actor be : toUpdate){
                 be.update();
             }
     }
@@ -127,7 +127,7 @@ public class World {
     }
     
     public Player getPlayer() {
-        for (BaseEntity be : entities) {
+        for (Actor be : entities) {
             if(be.getType().equals("player")) {
                 return (Player) be;
             }

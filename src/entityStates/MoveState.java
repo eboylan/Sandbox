@@ -4,7 +4,8 @@
  */
 package entityStates;
 
-import entities.BaseEntity;
+import entities.Actor;
+import entities.Player;
 import org.newdawn.slick.Animation;
 
 /**
@@ -15,7 +16,7 @@ public class MoveState implements EntityState {
 
     Animation a;
     int i;
-    private final BaseEntity be;
+    private final Actor be;
     int stopFrame;
     
     int xOffset;
@@ -24,7 +25,7 @@ public class MoveState implements EntityState {
     int y;
     int z;
 
-    public MoveState(BaseEntity be, Animation a, int i) {
+    public MoveState(Actor be, Animation a, int i) {
         this.be = be;
         this.a = a;
         this.i = i;
@@ -33,6 +34,7 @@ public class MoveState implements EntityState {
 
     @Override
     public void render() {
+        synchronized(this) {
         a.stopAt(stopFrame);
         if (z == 0) {
             switch (be.getFacing()) {
@@ -92,10 +94,14 @@ public class MoveState implements EntityState {
             y = 0;
         }
         a.draw((32 * be.getPosX() - (a.getWidth() / 2 - 16)) + xOffset, (32 * be.getPosY() - (a.getHeight() / 2 + 32)) + yOffset);
-        if (a.isStopped()) {
-            
+        if (a.isStopped()) {           
+            a.setCurrentFrame(be.getFacing() * i);
+            if (be.getClass().equals(Player.class)) {
+                be.getWorld().update();
+            }
             be.setIdle();
-            be.getWorld().update();
+        }   
+            
             //be.getEntAI().onEnter(be.getPosZ() + z, be.getPosX() + x, be.getPosY() + y, be.getWorld().tile(be.getPosZ() + z, be.getPosX() + x, be.getPosY() + y));
         }
 
@@ -113,12 +119,12 @@ public class MoveState implements EntityState {
     @Override
     public void start() {
         a.setCurrentFrame(be.getFacing() * i);
-        stopFrame = (be.getFacing() + 1) * i - 1;
+        stopFrame = ((be.getFacing() + 1) * i) - 1;
         a.start();
     }
 
     @Override
-    public void setTarget(BaseEntity target) {
+    public void setTarget(Actor target) {
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -4,18 +4,18 @@
  */
 package entityEffects;
 
-import entities.BaseEntity;
+import entities.Actor;
 
 /**
  *
  * @author Emmet
  */
 public class ModHP implements Effect{
-    private BaseEntity be;
+    private Actor be;
     private long duration;
     private int mod;
     
-    public ModHP(BaseEntity be, long l, int i) {
+    public ModHP(Actor be, long l, int i) {
         this.be = be;
         this.duration = l;
         this.mod = i;
@@ -32,7 +32,7 @@ public class ModHP implements Effect{
         }
     }
     
-    public void setBE(BaseEntity be) {
+    public void setBE(Actor be) {
         this.be = be;
         be.effectHP(mod);
         if (duration > 0) {

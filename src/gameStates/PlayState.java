@@ -9,7 +9,7 @@ import inventory.Icon;
 import inventory.Item;
 import inventory.ItemFactory;
 import inventory.Weapon;
-import entities.BaseEntity;
+import entities.Actor;
 import entities.EntityFactory;
 import entities.Player;
 import entityStates.IdleState;
@@ -35,19 +35,18 @@ import world.*;
  */
 public class PlayState extends BasicGameState {
 
-    World world;
-    Image ground;
-    SpriteSheet groundTiles;
-    int xOffset;
-    int yOffset;
+    private World world;
+    private Image ground;
+    private SpriteSheet groundTiles;
+    private int xOffset;
+    private int yOffset;
     private Player player;
-    CraftItem craftItem;
-    int tileSize;
-    int screenWidthTiles;
-    int screenHeightTiles;
+    private CraftItem craftItem;
+    private int tileSize;
+    private int screenWidthTiles;
+    private int screenHeightTiles;
     boolean showInfo;
     
-
     private Music music;
     private ItemFactory itemFactory;
     private EntityFactory entFactory;
@@ -63,9 +62,6 @@ public class PlayState extends BasicGameState {
         screenWidthTiles = 32 - 9;
         screenHeightTiles = 23;
         
-        
-        //stopRunFrame = 0;
-        
         ground = new Image("data/DungeonCrawl_ProjectUtumnoTileset.png");
         
         music = new Music("data/Music/Desolate.wav");
@@ -73,16 +69,13 @@ public class PlayState extends BasicGameState {
         groundTiles = new SpriteSheet(ground, tileSize, tileSize);
         createWorld();
         showInfo = true;
-        
-
-               
+                 
         gc.setShowFPS(false);
 
         itemFactory = new ItemFactory(world);
         entFactory = new EntityFactory(world, itemFactory);
         player = entFactory.newPlayer();
-        craftItem = new CraftItem(itemFactory);
-        
+        player.modHP(50);
        
         xOffset = getScrollX();
         yOffset = getScrollY();
@@ -106,7 +99,7 @@ public class PlayState extends BasicGameState {
         } 
 
         for (int i = 0; i < world.getDepth(); i++) {
-            for (int j = 0; j < 3 + i; j++) {
+            for (int j = 0; j < world.getWidth()/10 +  (2 * i); j++) {
                 entFactory.newGoblin(i, getPlayer());
             }
         }
@@ -173,14 +166,17 @@ public class PlayState extends BasicGameState {
             }
         }
         
-        for (BaseEntity be : world.entities) {
+        for (Actor be : world.entities) {
             if (getPlayer().canSeeLit(z, be.getPosX(), be.getPosY()) && z == be.getPosZ()) {
                 if (!be.getType().equals("player") && !be.getType().equals("goblin")) {
                     groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
                 }
                 if (be.getType().equals("player") || be.getType().equals("goblin")) {
-                    //be.render();
-                    groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
+                    //if(be.getType().equals("player")) {
+                        be.render();
+                    //} else {//test, take out
+                        //groundTiles.getSubImage(be.getImageCol(), be.getImageRow()).draw(tileSize * be.getPosX(), tileSize * be.getPosY());
+                    //}
                 }
             }
         }
@@ -188,19 +184,19 @@ public class PlayState extends BasicGameState {
         
         g.setColor(Color.white);
         
-        /*
+        
         g.drawString("Play State FPS: " + gc.getFPS(), tileSize * (24 + xOffset), (yOffset + 16) * tileSize);
         g.drawString("Press Escape to lose", tileSize * (24 + xOffset), (yOffset + 17) * tileSize);
         //g.drawString("Press Enter to win", tileSize * (24 + xOffset), (yOffset + 18) * tileSize);
         g.drawString("Entity State: " + getPlayer().getEntState(), tileSize * (22 + xOffset), (yOffset + 18) * tileSize);
         //g.drawString("Entities: " + world.entities.size() + " Items: " + world.worldInventory.size(), tileSize * (24 + xOffset), (yOffset + 19) * tileSize);
         g.drawString("Player x : " + getPlayer().getPosX() + " y: " + getPlayer().getPosY() + " z: " + getPlayer().getPosZ(), tileSize * (24 + xOffset), (yOffset + 20) * tileSize);
-        for (BaseEntity be : world.entities) {
+        for (Actor be : world.entities) {
             if ("manticore".equals(be.getType())) {
                 g.drawString("boss : " + be.getPosX() + " y: " + be.getPosY() + " z: " + be.getPosZ(), tileSize * (24 + xOffset), (yOffset + 21) * tileSize);
             }
         }
-        */
+        
         if(showInfo) {
             renderInfo(g);
         }
@@ -214,9 +210,9 @@ public class PlayState extends BasicGameState {
         if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
             sbg.enterState(3);
         }
-        if (gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
+        /*if (gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
             sbg.enterState(2);
-        }
+        }*/
         if (gc.getInput().isKeyPressed(Input.KEY_RIGHT) || gc.getInput().isKeyPressed(Input.KEY_MULTIPLY)) {
             if (player.isShowCraft()) {
                 getPlayer().setCraftX(1);
@@ -246,59 +242,61 @@ public class PlayState extends BasicGameState {
             }
         }
         
-        if (true) {//player.isIdle()) {
+        if (player.isIdle()) {
             
             if(gc.getInput().isKeyPressed(Input.KEY_NUMPAD6)) {
-                //
-                //player.stopAnim();
+                
+                player.stopAnim();
                 getPlayer().moveBy(0, 1, 0);
-                //player.setMove();
-                xOffset = getScrollX();
-                world.update();
+                player.setMove();
+                xOffset = getScrollX();             
+                //world.update();
+                gc.resume();
+          
             }
             if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD4)) {
-                //player.stopAnim();
+                player.stopAnim();
                 getPlayer().moveBy(0, -1, 0);
                 xOffset = getScrollX();
-                world.update();
+                //world.update();
             }
             if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD8)) {
-                //player.stopAnim();
+                player.stopAnim();
                 getPlayer().moveBy(0, 0, -1);
                 yOffset = getScrollY();
-                world.update();
+                //world.update();
             }
             if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD2)) {
-                //player.stopAnim();
+                player.stopAnim();
                 getPlayer().moveBy(0, 0, 1);
                 yOffset = getScrollY();
-                world.update();
+                //world.update();
             }
             if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD9)) {
-                //player.stopAnim();
+                player.stopAnim();
                 getPlayer().moveBy(0, 1, -1);
                 xOffset = getScrollX();
-                world.update();
+                //world.update();
             }
             if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD7)) {
-                //player.stopAnim();
+                player.stopAnim();
                 getPlayer().moveBy(0, -1, -1);
                 xOffset = getScrollX();
-                world.update();
+                //world.update();
             }
             if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD1)) {
-                //player.stopAnim();
+                player.stopAnim();
                 getPlayer().moveBy(0, -1, 1);
                 xOffset = getScrollX();
-                world.update();
+                //world.update();
             }
             if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD3)) {
-                //player.stopAnim();
+                player.stopAnim();
                 getPlayer().moveBy(0, 1, 1);
                 xOffset = getScrollX();
-                world.update();
+                //world.update();
             }
-        }
+        } 
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD5)) {
             if (world.tile(getPlayer().getPosZ(), getPlayer().getPosX(), getPlayer().getPosY()) == Tile.STAIRSUP) {
                 getPlayer().moveBy(-1, 0, 0);
@@ -325,28 +323,16 @@ public class PlayState extends BasicGameState {
             getPlayer().drop();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_E)) {
-            getPlayer().equip();
+            player.equip();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_U)) {
-            getPlayer().use();
+            player.use();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_I)) {
             showInfo = !showInfo;
         }
         if (gc.getInput().isKeyPressed(Input.KEY_C)) {
-            if(player.isShowCraft()) {
-                Item i1 = player.getInventry().get((player.getSelectY() * 5) + player.getSelectX());
-                Item i2 = player.getInventry().get((player.getCraftY() * 5) + player.getCraftX());
-                if (i1 == null || i2 == null) {
-                    player.setShowCraft(false);
-                } else {
-                   getPlayer().getInventry().remove(i1); 
-                   getPlayer().getInventry().remove(i2);
-                   getPlayer().getInventry().add(craftItem.craft(i1, i2));
-                }
-            } else {
-                player.setShowCraft(true); 
-            }
+            player.craft(craftItem);
         }
         
         if (getPlayer().getHP() < 1) {
@@ -385,7 +371,7 @@ public class PlayState extends BasicGameState {
     /**
      * @return the player
      */
-    public BaseEntity getPlayer() {
+    public Actor getPlayer() {
         return player;
     }
 

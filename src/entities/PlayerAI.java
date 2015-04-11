@@ -14,7 +14,7 @@ public class PlayerAI extends EntityAI {
 
     //FieldOfView fov;
 
-    public PlayerAI(BaseEntity be) {
+    public PlayerAI(Actor be) {
         super(be);
     }
 }

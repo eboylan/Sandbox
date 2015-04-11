@@ -14,9 +14,9 @@ import world.Tile;
  * @author Emmet
  */
 public class EntityAI {
-    protected BaseEntity be;
+    protected Actor be;
     
-    public EntityAI(BaseEntity be) {
+    public EntityAI(Actor be) {
         this.be = be;
         this.be.setEntAI(this);
     }
