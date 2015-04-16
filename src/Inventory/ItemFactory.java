@@ -1,10 +1,11 @@
 package inventory;
 
-
+import actorEffects.ModAttack;
+import actorEffects.ModDef;
+import actorEffects.ModHP;
 import inventory.Armour;
 import inventory.Weapon;
 import world.World;
-import entityEffects.*;
 
 /*
  * To change this template, choose Tools | Templates
@@ -21,23 +22,11 @@ public class ItemFactory {
     public ItemFactory(World world) {
         this.world = world;
     }
-     /*
-    public Armour newTunic(int depth) {
-        Armour tu = new Armour("Tunic", 36, 21, 0, "Plain tunic");
-        world.putItemInClearTile(tu, depth);
-        return tu;
-    }*/
     
     public Armour newTunic() {
         Armour tu = new Armour("Tunic", 36, 21, 0, "Plain tunic");
         return tu;
     }
-    
-    /* Item newLeatherArmour(int depth) {
-        Item la = new Armour("Leather Armour", 22, 21, 1, "Tough Leather +1 Defence");
-        world.putItemInClearTile(la, depth);
-        return la;
-    }*/
     
     public Armour newLeatherArmour() {
         Armour la = new Armour("Leather Armour", 22, 21, 1, "Tough Leather +1 Defence");
@@ -84,6 +73,7 @@ public class ItemFactory {
         Item tc = new Item("Torch", 57, 18, "Lights up area");
         return tc;
     }
+    
     
     public Potion newBlackPotion() {
         Potion bp = new Potion("Black Potion", 28, 24, new ModAttack(null, 10, 2), "Strange black liquid");

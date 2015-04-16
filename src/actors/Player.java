@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package entities;
+package actors;
 
 import inventory.Armour;
 import inventory.CraftItem;
@@ -50,19 +50,35 @@ public class Player extends Actor {
         g.setColor(Color.black);
         g.fillRect((xOffset + 24) * tileSize, (yOffset + 2) * tileSize, 3 * tileSize, 4 * tileSize);
         groundTiles.getSubImage(Icon.ATTACK.getImageCol(), Icon.ATTACK.getImageRow()).draw((xOffset + 24) * tileSize, (yOffset + 2) * tileSize);
-        groundTiles.getSubImage(42 + (super.getAV() / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 2) * tileSize);
-        groundTiles.getSubImage(42 + (super.getAV() % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 2) * tileSize);
-        //g.fillRect((xOffset + 24) * tileSize, (yOffset + 3) * tileSize, 3 * tileSize, tileSize);
+        int av = super.getAV();
+        if(av < 0) {
+            av = 0;
+        }
+        groundTiles.getSubImage(42 + (av / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 2) * tileSize);
+        groundTiles.getSubImage(42 + (av % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 2) * tileSize);
+        g.fillRect((xOffset + 24) * tileSize, (yOffset + 3) * tileSize, 3 * tileSize, tileSize);
         groundTiles.getSubImage(Icon.DEFENCE.getImageCol(), Icon.DEFENCE.getImageRow()).draw((xOffset + 24) * tileSize, (yOffset + 3) * tileSize);
-        groundTiles.getSubImage(42 + (super.getDV() / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 3) * tileSize);
-        groundTiles.getSubImage(42 + (super.getDV() % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 3) * tileSize);
-        //g.fillRect((xOffset + 24) * tileSize, (yOffset + 4) * tileSize, 3 * tileSize, tileSize);
+        int dv = super.getDV();
+        if(dv < 0) {
+            dv = 0;
+        }
+        groundTiles.getSubImage(42 + (dv / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 3) * tileSize);
+        groundTiles.getSubImage(42 + (dv % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 3) * tileSize);
+        g.fillRect((xOffset + 24) * tileSize, (yOffset + 4) * tileSize, 3 * tileSize, tileSize);
         groundTiles.getSubImage(Icon.HITPOINTS.getImageCol(), Icon.HITPOINTS.getImageRow()).draw((xOffset + 24) * tileSize, (yOffset + 4) * tileSize);
-        groundTiles.getSubImage(42 + (super.getHP() / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 4) * tileSize);
-        groundTiles.getSubImage(42 + (super.getHP() % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 4) * tileSize);
+        int hp = super.getHitPoints();
+        if(hp < 0) {
+            hp = 0;
+        }
+        groundTiles.getSubImage(42 + (hp / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 4) * tileSize);
+        groundTiles.getSubImage(42 + (hp % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 4) * tileSize);
         groundTiles.getSubImage(Icon.FOOD.getImageCol(), Icon.FOOD.getImageRow()).draw((xOffset + 24) * tileSize, (yOffset + 5) * tileSize);
-        groundTiles.getSubImage(42 + (super.getFood() / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 5) * tileSize);
-        groundTiles.getSubImage(42 + (super.getFood() % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 5) * tileSize);
+        int fd = super.getFood();
+        if(fd < 0) {
+            fd = 0;
+        }
+        groundTiles.getSubImage(42 + (fd / 10), 0).draw((xOffset + 25) * tileSize, (yOffset + 5) * tileSize);
+        groundTiles.getSubImage(42 + (fd % 10), 0).draw((xOffset + 26) * tileSize, (yOffset + 5) * tileSize);
         
         
         g.fillRect((xOffset + 28) * tileSize, (yOffset + 2) * tileSize, 2 * tileSize, tileSize);
@@ -82,8 +98,8 @@ public class Player extends Actor {
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 5; x++) {
                 int i = x + (5 * y);
-                if (super.getInventry().get(i) != null) {
-                    groundTiles.getSubImage(super.getInventry().get(i).getImageCol(), super.getInventry().get(i).getImageRow()).draw((xOffset + 25 + x) * tileSize, (yOffset + 8 + y) * tileSize);
+                if (super.getInventory().get(i) != null) {
+                    groundTiles.getSubImage(super.getInventory().get(i).getImageCol(), super.getInventory().get(i).getImageRow()).draw((xOffset + 25 + x) * tileSize, (yOffset + 8 + y) * tileSize);
                 }
             }
         }
@@ -93,28 +109,26 @@ public class Player extends Actor {
         g.fillRect((xOffset + 24) * tileSize, (yOffset + 13) * tileSize, 7 * tileSize, 2 * tileSize);
         
         g.fillRect((xOffset + 24) * tileSize, (yOffset + 16) * tileSize, 7 * tileSize, 6 * tileSize);
-        g.setColor(Color.white);
-        if (super.getInventry().get(5 * selectY + selectX) != null) {
-            g.drawString("" + super.getInventry().get(5 * selectY + selectX).getName(), (xOffset + 24) * tileSize, (yOffset + 13) * tileSize);
-            g.drawString("" + super.getInventry().get(5 * selectY + selectX).getDesription(), (xOffset + 24) * tileSize, (yOffset + 14) * tileSize);
-            if (super.getInventry().get(5 * selectY + selectX).getClass().equals(Potion.class)) {
+        g.setColor(Color.white);       
+        
+        if (super.getInventory().get(5 * selectY + selectX) != null) {
+            g.drawString("" + super.getInventory().get(5 * selectY + selectX).getName(), (xOffset + 24) * tileSize, (yOffset + 13) * tileSize);
+            g.drawString("" + super.getInventory().get(5 * selectY + selectX).getDesription(), (xOffset + 24) * tileSize, (yOffset + 14) * tileSize);
+            if (super.getInventory().get(5 * selectY + selectX).getClass().equals(Potion.class)) {
                 g.drawString("(U)se or (D)rop", (xOffset + 24) * tileSize, (yOffset + 14) * tileSize + tileSize/2);
             } else {
                 g.drawString("(E)quip or (D)rop", (xOffset + 24) * tileSize, (yOffset + 14) * tileSize + tileSize/2);
             }
         }
         
+        
         for (int i = 0; i < messages.size(); i++) {
-            //g.drawString("" + messages.get(i), tileSize * (24 + xOffset), tileSize * (yOffset + 16) +  (i * tileSize/2));
+            g.drawString("" + messages.get(i), tileSize * (24 + xOffset), tileSize * (yOffset + 16) +  (i * tileSize/2));
         }
 
 
     }
 
-    /**
-     * @param selectX the selectX to set
-     */
-    @Override
     public void setSelectX(int x) {
         selectX += x;
         if (getSelectX() < 0) {
@@ -125,10 +139,6 @@ public class Player extends Actor {
         }
     }
 
-    /**
-     * @param selectY the selectY to set
-     */
-    @Override
     public void setSelectY(int y) {
         selectY += y;
         if (getSelectY() < 0) {
@@ -153,10 +163,6 @@ public class Player extends Actor {
         return selectY;
     }
     
-        /**
-     * @param craftX the selectX to set
-     */
-    @Override
     public void setCraftX(int x) {
         craftX += x;
         if (getCraftX() < 0) {
@@ -167,10 +173,6 @@ public class Player extends Actor {
         }
     }
 
-    /**
-     * @param craftY the selectY to set
-     */
-    @Override
     public void setCraftY(int y) {
         craftY += y;
         if (getCraftY() < 0) {
@@ -180,17 +182,11 @@ public class Player extends Actor {
             craftY = 3;
         }
     }
-    
-    /**
-     * @return the craftX
-     */
+
     public int getCraftX() {
         return craftX;
     }
 
-    /**
-     * @return the craftY
-     */
     public int getCraftY() {
         return craftY;
     }
@@ -198,36 +194,39 @@ public class Player extends Actor {
     @Override
     public int getVisionRadius() {
         int vr = super.getVisionRadius();
-        if (getEquipment(2).getName().equals("Torch")) vr += 3;
+        if (getEquipment(2).getName().equals("Torch")) {
+            vr += 3;
+        }
         return vr;
     }
 
+    @Override
     public void drop() {
-        Item dropItem = super.getInventry().get((selectY * 5) + selectX);
+        Item dropItem = super.getInventory().get((selectY * 5) + selectX);
         if (dropItem != null && super.getWorld().isItemAt(super.getPosZ(), super.getPosX(), super.getPosY()) == null) {
             dropItem.setPos(super.getPosZ(), super.getPosX(), super.getPosY());
             super.getWorld().worldInventory.add(dropItem);
-            super.getInventry().remove(dropItem);
-            super.getWorld().update();
+            super.getInventory().remove(dropItem);
+            //super.getWorld().update();//replace with updateActors
             message("player dropped ");
             message(dropItem.getName());
         }
     }
     
     public void equip() {
-        Item equipItem = super.getInventry().get((selectY * 5) + selectX);
+        Item equipItem = super.getInventory().get((selectY * 5) + selectX);
         if (equipItem != null) {              
             if (equipItem.getClass().equals(Armour.class)) {
-                super.getInventry().remove(equipItem);
-                super.getInventry().add(super.getEquipment(0));
+                super.getInventory().remove(equipItem);
+                super.getInventory().add(super.getEquipment(0));
                 super.setEquipedArmour((Armour)equipItem);
             } else if (equipItem.getClass().equals(Weapon.class)) {
-                super.getInventry().remove(equipItem);
-                super.getInventry().add(super.getEquipment(1));               
+                super.getInventory().remove(equipItem);
+                super.getInventory().add(super.getEquipment(1));               
                 super.setEquipedWeapon((Weapon)equipItem);
             } else if (equipItem.getClass().equals(Item.class)) {
-                super.getInventry().remove(equipItem);
-                super.getInventry().add(super.getEquipment(2));          
+                super.getInventory().remove(equipItem);
+                super.getInventory().add(super.getEquipment(2));          
                 super.setOffHand(equipItem);
             }
             message("player equiped ");
@@ -236,16 +235,16 @@ public class Player extends Actor {
     }
     
     public void use() {
-        Item useItem = super.getInventry().get((selectY * 5) + selectX);
+        Item useItem = super.getInventory().get((selectY * 5) + selectX);
             if (useItem != null && useItem.getClass().equals(Potion.class)) {
-                super.getInventry().remove(useItem);
+                super.getInventory().remove(useItem);
                 Potion p = (Potion) useItem;
                 super.addEffect(p.getEffect());
-                p.getEffect().setBE(this); 
+                p.getEffect().setActor(this); 
                 message("player used "); 
                 message(useItem.getName());
             } else if (useItem != null && useItem.getClass().equals(Food.class)) {
-                super.getInventry().remove(useItem);
+                super.getInventory().remove(useItem);
                 Food f = (Food) useItem;
                 super.modFood(f.getFoodValue());
                 message("player used "); 
@@ -269,18 +268,26 @@ public class Player extends Actor {
 
     public void craft(CraftItem craftItem) {
         if(showCraft) {
-                Item i1 = getInventry().get((getSelectY() * 5) + getSelectX());
-                Item i2 = getInventry().get((getCraftY() * 5) + getCraftX());
+                Item i1 = getInventory().get((getSelectY() * 5) + getSelectX());
+                Item i2 = getInventory().get((getCraftY() * 5) + getCraftX());
                 if (i1 == null || i2 == null) {
                     showCraft = false;
                 } else {
-                   getInventry().remove(i1); 
-                   getInventry().remove(i2);
-                   getInventry().add(craftItem.craft(i1, i2));
+                   getInventory().remove(i1); 
+                   getInventory().remove(i2);
+                   Item newItem = craftItem.craft(i1, i2);
+                   if(newItem != null) {
+                        getInventory().add(craftItem.craft(i1, i2));
+                    }
                   setShowCraft(false);
                 }
             } else {
                 showCraft = true; 
             }
+    }
+    
+    @Override
+    public void update() {
+        super.update();
     }
 }

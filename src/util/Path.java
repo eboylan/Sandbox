@@ -4,7 +4,8 @@
  */
 package util;
 
-import entities.Actor;
+//import entities.Actor;
+import actors.Actor;
 import java.util.List;
 
 /**
@@ -18,10 +19,11 @@ public class Path {
   private List<Point> points;
   public List<Point> points() { return points; }
 
-  public Path(Actor be, int x, int y){
-      points = pf.findPath(be, 
-                           new Point(be.getPosZ(), be.getPosX(), be.getPosY()), 
-                           new Point(be.getPosZ(), x, y), 
+  
+  public Path(Actor a, int x, int y){
+      points = pf.findPath(a, 
+                           new Point(a.getPosZ(), a.getPosX(), a.getPosY()), 
+                           new Point(a.getPosZ(), x, y), 
                            300);
   }
 }

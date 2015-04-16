@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package entityEffects;
+package actorEffects;
 
-import entities.Actor;
+import actors.Actor;
 
 /**
  *
@@ -13,6 +13,6 @@ import entities.Actor;
 public interface Effect {
     public void update();
 
-    public void setBE(Actor player);
+    public void setActor(Actor a);
     
 }

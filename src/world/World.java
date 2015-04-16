@@ -5,11 +5,14 @@
 package world;
 
 import inventory.Item;
-import entities.Actor;
-import entities.Player;
+import actors.Actor;
+import actors.Player;
+import actors.Actor;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -23,9 +26,11 @@ public class World {
     private int depth;
     private int height;
     private int width;
-    public CopyOnWriteArrayList<Actor> entities;
+    public CopyOnWriteArrayList<Actor> actors;
     public List<Item> worldInventory;
+    private Map<Tile, Actor> reservedTiles;
     private boolean won = false;
+    private Player playerRef = null;
 
     public int getHeight() {
         return height;
@@ -52,8 +57,9 @@ public class World {
         this.depth = tiles.length;
         this.width = tiles[0].length;
         this.height = tiles[0][0].length;
-        this.entities = new CopyOnWriteArrayList<>();
+        this.actors = new CopyOnWriteArrayList<>();
         this.worldInventory = new ArrayList<>();
+        this.reservedTiles = new HashMap<Tile, Actor>();
     }
 
     public Tile tile(int d, int c, int r) {
@@ -72,14 +78,21 @@ public class World {
         return tiles[z][x][y].getImageRow();
     }
 
+    
     public Actor isEntityAt(int z, int x, int y) {
-        for (Actor be : entities) {
-            if (be.getPosZ() == z && be.getPosX() == x && be.getPosY() == y) {
-                return be;
+        Actor p = getPlayer();
+        if ((p != null) && (p.getPosZ() == z && p.getPosX() == x && p.getPosY() == y)) {
+            return p;
+        }
+        for (Actor a : actors) {
+            if (a.getPosZ() == z && a.getPosX() == x && a.getPosY() == y) {
+                return a;
             }
         }
         return null;
     }
+    
+    
     
     public Item isItemAt(int z, int x, int y) {
         for (Item i : worldInventory) {
@@ -89,8 +102,8 @@ public class World {
         }
         return null;
     }
-
-    public void putInClearTile(Actor be, int z) {
+      
+    public void putInClearTile(Actor a, int z) {
         int x;
         int y;
 
@@ -98,22 +111,14 @@ public class World {
             x = (int) (Math.random() * getWidth());
             y = (int) (Math.random() * getHeight());
         } while (tile(z, x, y).isGround() == false || isEntityAt(z, x, y) != null);
-        be.setPos(z, x, y);
-        entities.add(be);
+        a.setPos(z, x, y);
+        actors.add(a);
     }
-    
+   
     public void remove(Actor target) {
-        entities.remove(target);
+        actors.remove(target);
     }
-
-    public void update() {
-        List<Actor> toUpdate = new ArrayList<>(entities);
-        //Collections.sort(toUpdate);
-            for (Actor be : toUpdate){
-                be.update();
-            }
-    }
-
+     
     public void putItemInClearTile(Item i, int depth) {
         int x;
         int y;
@@ -124,14 +129,32 @@ public class World {
         } while (tile(depth, x, y).isGround() == false);
         i.setPos(depth, x, y);
         worldInventory.add(i);
+    } 
+    
+    public void setPlayerRef(Player p) {
+        playerRef = p;
     }
     
     public Player getPlayer() {
-        for (Actor be : entities) {
-            if(be.getType().equals("player")) {
-                return (Player) be;
+        return playerRef;
+    }
+    
+    public void reserveTile(Tile t, Actor a) {
+        reservedTiles.put(t,a);
+    }
+    
+    public void freeReservedTiles() {
+        reservedTiles.clear();
+    }
+    
+    public boolean isTileFree(Tile t, Actor a) {
+        if (reservedTiles.containsKey(t)) {
+            if(reservedTiles.get(t).equals(a)) {
+                return true;
+            } else {
+                return false;
             }
-        }
-        return null;
+        } 
+        return true;
     }
 }

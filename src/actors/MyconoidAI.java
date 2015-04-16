@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package entities;
+package actors;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,14 +12,14 @@ import org.newdawn.slick.SlickException;
  *
  * @author Emmet
  */
-public class MyconoidAI extends EntityAI {
-    private EntityFactory entFactory;
+public class MyconoidAI extends AI {
+    private ActorFactory actFactory;
     private int spreadcount;
     private boolean spawn;
  
-    public MyconoidAI(Actor be, EntityFactory entFactory, boolean spawn) {
-        super(be);
-        this.entFactory = entFactory;
+    public MyconoidAI(Actor a, ActorFactory actFactory, boolean spawn) {
+        super(a);
+        this.actFactory = actFactory;
         this.spawn = spawn;
     }
 
@@ -38,15 +38,15 @@ public class MyconoidAI extends EntityAI {
     }
  
     private void spread() throws SlickException{
-        int z = be.getPosZ();
-        int x = be.getPosX() + (int)(Math.random() * 11) - 5;
-        int y = be.getPosY() + (int)(Math.random() * 11) - 5;
+        int z = a.getPosZ();
+        int x = a.getPosX() + (int)(Math.random() * 11) - 5;
+        int y = a.getPosY() + (int)(Math.random() * 11) - 5;
   
-        if (!be.canEnter(z, x, y)) {
+        if (!a.canEnter(z, x, y)) {
             return;
         }
   
-        Actor child = entFactory.newMyconoid(false, z);
+        Actor child = actFactory.newMyconoid(false, z);
         child.setPos(z, x, y);
         spreadcount++;
     }

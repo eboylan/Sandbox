@@ -4,8 +4,8 @@
  */
 package inventory;
 
-import entities.Actor;
-import entityEffects.Effect;
+import actors.Actor;
+import actorEffects.Effect;
 
 /**
  *
