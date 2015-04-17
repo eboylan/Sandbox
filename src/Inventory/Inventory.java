@@ -55,4 +55,13 @@ public class Inventory {
     public int length() {
         return inventory.length;
     }
+    
+    public boolean hasItem(String item) {
+        for (int i = 0; i < inventory.length; i++) {
+            if (inventory[i].getName() == item) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -117,7 +117,7 @@ public class WorldBuilder {
         }
  
     public WorldBuilder makeCaves() {
-        return randomizeTiles().initSmooth(2).smooth(2).createRegions().connectRegions();//.varyTiles();
+        return randomizeTiles().initSmooth(2).smooth(2).createRegions().connectRegions();
     }
 
     private WorldBuilder createRegions() {

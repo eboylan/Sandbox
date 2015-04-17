@@ -1,6 +1,5 @@
 package simpleslickgame;
-import gameStates.PlayState;
-import gameStates.StartState;
+import gameStates.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.newdawn.slick.AppGameContainer;
@@ -27,7 +26,7 @@ public class SimpleSlickGame extends StateBasedGame
 		{
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new SimpleSlickGame("Simple Slick Game"));
-			appgc.setDisplayMode(1024, 768, true);
+			appgc.setDisplayMode(1024, 768, false);
                         appgc.setTargetFrameRate(59);
 			appgc.start();
 		}
@@ -41,5 +40,8 @@ public class SimpleSlickGame extends StateBasedGame
     public void initStatesList(GameContainer gc) throws SlickException {
         this.addState(new StartState());
         this.addState(new PlayState());
+        this.addState(new LoseStateDie());
+        this.addState(new LoseStateQuit());
+        this.addState(new WinState());
     }
 }

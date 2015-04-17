@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import util.Point;
 
 
 /**
@@ -156,5 +157,9 @@ public class World {
             }
         } 
         return true;
+    }
+    
+    public void addDungeonExit(Point p) {
+        tiles[p.z][p.x][p.y] = Tile.STAIRSUP;
     }
 }

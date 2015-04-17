@@ -89,7 +89,7 @@ public class Pathfinder {
         private void checkNeighbors(Actor a, Point end, Point closest) {
             for (Point neighbor : closest.neighbors8()) {
                 if (closed.contains(neighbor)
-                 || !a.canDrawPath(a.getPosZ(), neighbor.x, neighbor.y)
+                 || !a.canDrawPath(neighbor.z/*a.getPosZ()*/, neighbor.x, neighbor.y)
                  && !neighbor.equals(end)) {
                     continue;
                 }

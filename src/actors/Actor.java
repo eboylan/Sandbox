@@ -8,6 +8,7 @@ package actors;
 //import entityEffects.*;
 import actorEffects.Effect;
 import actors.states.ActorState;
+import actors.states.DeathState;
 import inventory.Armour;
 import inventory.Inventory;
 import inventory.Item;
@@ -115,6 +116,10 @@ public class Actor {
         return imageCol;
     }
     
+    public boolean isDead() {
+        return false;
+    }
+    
     public void setPos(int z, int x, int y) {
         this.posZ = z;
         this.posX = x;
@@ -134,6 +139,12 @@ public class Actor {
     }
 
     public int getHitPoints() {
+        if(hitPoints < 1) {
+            setState(5);
+            if(this.type.equals("player")) {
+                active = true;
+            }
+        }
         return hitPoints;
     }
 
@@ -207,9 +218,9 @@ public class Actor {
         if(target != null && target != this) {
             setState(1);
             actState.setTarget(target);
-        } else if (canEnter(posZ + headingZ, posX + headingX, posY + headingY)) {
-            setState(4);
+        } else if (canDrawPath(posZ + headingZ, posX + headingX, posY + headingY)) {
             getWorld().reserveTile(getWorld().tile(z, x, y), this);
+            setState(4);
         } else {
             setState(0);
         }
@@ -223,6 +234,9 @@ public class Actor {
             world.getPlayer().message(" for " + dmg + " damage");
         }
         target.modHP(-dmg);
+        /*if(target.getAI().getClass().equals(WanderMonsterAI.class) ) {
+            target.setAI(new HuntingMonsterAI(target, this));
+        }*/
     }
 
     public void setFacing(int facing) {
@@ -242,7 +256,7 @@ public class Actor {
     }
     
     public boolean canEnter(int z, int x, int y) {
-	return getWorld().tile(z, x, y).isGround() && getWorld().isEntityAt(z, x, y) == null && getWorld().isTileFree(getWorld().tile(z, x, y), this);	
+	return getAI().canEnter(z, x, y);
     }
     
     public boolean canSeeDim(int z, int x, int y) {
@@ -254,7 +268,7 @@ public class Actor {
     }
     
     public boolean canDrawPath(int z, int x, int y) {
-	return getWorld().tile(z, x, y).isGround() && getWorld().isEntityAt(z, x, y) == null;	
+	return getAI().canDrawPath(z, x, y);	
     }
 
     public long getFCount() {
@@ -370,7 +384,7 @@ public class Actor {
     
     public void die() {
         drop();
-       world.actors.remove(this);
+        world.actors.remove(this);
     }
     
     public void drop() {

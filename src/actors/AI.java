@@ -4,6 +4,7 @@ import java.util.Iterator;
 import util.Line;
 import util.Point;
 import world.Tile;
+import world.World;
 
 public class AI {
     protected Actor a;
@@ -42,6 +43,20 @@ public class AI {
             return false;
         }
         return true;
+    }
+    
+    public boolean canEnter(int z, int x, int y) {
+	return getWorld().tile(z, x, y).isGround() && 
+                (getWorld().isEntityAt(z, x, y) == null || getWorld().isEntityAt(z,x,y).getType().equals("player")) 
+                && getWorld().isTileFree(getWorld().tile(z, x, y), a);	
+    }
+    
+    public World getWorld() {
+        return a.getWorld();
+    }
+    
+    public boolean canDrawPath(int z, int x, int y) {
+	return a.getWorld().tile(z, x, y).isGround();	
     }
     
     public boolean canSeeLit(int z, int x, int y) {

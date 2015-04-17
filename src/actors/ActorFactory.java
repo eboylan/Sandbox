@@ -28,6 +28,13 @@ public class ActorFactory {
     private SpriteSheet goblinAtt3Sheet, goblinIdleSheet, goblinDeathSheet;
     private SpriteSheet lizardRunSheet, lizardAtt1Sheet, lizardAtt2Sheet;
     private SpriteSheet lizardAtt3Sheet, lizardIdleSheet, lizardDeathSheet;
+    private SpriteSheet manticoreRunSheet;
+    private SpriteSheet manticoreAtt1Sheet;
+    private SpriteSheet manticoreAtt2Sheet;
+    private SpriteSheet manticoreAtt3Sheet;
+    private SpriteSheet manticoreIdleSheet;
+    private SpriteSheet manticoreDeathSheet;
+
     
     public ActorFactory(World world, ItemFactory iFact) throws SlickException {
         this.world = world;
@@ -64,7 +71,7 @@ public class ActorFactory {
     
     public Actor newLizard(int depth) throws SlickException {
         Actor lizard = new Actor("lizard", world, 3, 3, 6, 1, 6, 3);
-        world.putInClearTile(lizard, depth);
+        world.putInClearTile(lizard, 0);
         lizard.setAI(new WanderMonsterAI(lizard));
         lizard.addState(0, new IdleState(lizard, lizardIdleSheet, 10, -20, -8));
         lizard.addState(1, new AttackState(lizard, lizardAtt1Sheet, 10, -36, -8));
@@ -99,6 +106,14 @@ public class ActorFactory {
         world.putInClearTile(manticore, depth);
         manticore.addEffect(new Regenerate(manticore, -1));
         manticore.setAI(new HuntingMonsterAI(manticore, player));
+        manticore.addState(0, new IdleState(manticore, manticoreIdleSheet, 31, -45, -35));
+        manticore.addState(1, new AttackState(manticore, manticoreAtt1Sheet, 31, -45, -35));
+        manticore.addState(2, new AttackState(manticore, manticoreAtt2Sheet, 31, -45, -35));
+        manticore.addState(3, new AttackState(manticore, manticoreAtt3Sheet, 31, -45, -35));
+        manticore.addState(4, new RunState(manticore, manticoreRunSheet, 26, -45, -35));
+        manticore.addState(5, new DeathState(manticore, manticoreDeathSheet, 62, -45, -35));
+        manticore.inventoryAdd(itemFactory.newManticoreRemains());
+        manticore.setState(0);
         return manticore;
     }
     
@@ -125,7 +140,15 @@ public class ActorFactory {
             lizardAtt2Sheet = new SpriteSheet("data/Lizard/LizAttack.png", 68, 47);
             lizardAtt3Sheet = new SpriteSheet("data/Lizard/LizAttack.png", 68, 47);
             lizardIdleSheet = new SpriteSheet("data/Lizard/LizIdle.png", 68, 47);
-            lizardDeathSheet = new SpriteSheet("data/Lizard/LizDeath.png", 70, 44);           
+            lizardDeathSheet = new SpriteSheet("data/Lizard/LizDeath.png", 70, 44); 
+            
+         //manticore sprites
+            manticoreRunSheet = new SpriteSheet("data/Manticore/ManticoreRun.png", 105, 79);
+            manticoreAtt1Sheet = new SpriteSheet("data/Manticore/ManticoreAttack.png", 105, 79);
+            manticoreAtt2Sheet = new SpriteSheet("data/Manticore/ManticoreAttack.png", 105, 79);
+            manticoreAtt3Sheet = new SpriteSheet("data/Manticore/ManticoreAttack.png", 105, 79);
+            manticoreIdleSheet = new SpriteSheet("data/Manticore/ManticoreIdle.png", 105, 79);
+            manticoreDeathSheet = new SpriteSheet("data/Manticore/ManticoreDeath.png", 105, 79);
     }
 
 }

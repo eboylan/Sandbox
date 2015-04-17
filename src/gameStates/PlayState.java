@@ -4,22 +4,15 @@
  */
 package gameStates;
 
-import inventory.Armour;
-import inventory.Icon;
-import inventory.Item;
-import inventory.ItemFactory;
-import inventory.Weapon;
-import inventory.CraftItem;
-import inventory.Potion;
+
 import actors.Actor;
 import actors.ActorFactory;
 import actors.Player;
+import inventory.CraftItem;
+import inventory.Item;
 import inventory.ItemFactory;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -69,16 +62,27 @@ public class PlayState extends BasicGameState {
         music = new Music("data/Music/Desolate.wav");
 
         groundTiles = new SpriteSheet(ground, tileSize, tileSize);
-        createWorld();
+        
         showInfo = true;
 
         gc.setShowFPS(false);
+        
 
-        itemFactory = new ItemFactory(world);
+        music.setVolume(0.4f);
+    }
+
+    @Override
+    public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
+        music.loop();
+        createWorld();
+        
+        //itemFactory = new ItemFactory(world);
+        itemFactory = new ItemFactory();
+        
         actFactory = new ActorFactory(world, itemFactory);
         player = actFactory.newPlayer();
         craftItem = new CraftItem(itemFactory);
-
+        
         for (int i = 0; i < world.getDepth(); i++) {
             for (int j = 0; j < 8 + i; j++) {
                 actFactory.newLizard(i);
@@ -92,6 +96,11 @@ public class PlayState extends BasicGameState {
         }
         world.actors.remove(player);
         world.setPlayerRef(player);
+        
+        
+        actFactory.newManticore(world.getDepth() - 1, player);
+
+        world.addDungeonExit(player.getPos());
 
         for (int i = 0; i < world.getDepth(); i++) {
             world.putItemInClearTile(itemFactory.newLeatherArmour(), i);
@@ -126,13 +135,6 @@ public class PlayState extends BasicGameState {
 
         xOffset = getScrollX();
         yOffset = getScrollY();
-
-        music.setVolume(0.4f);
-    }
-
-    @Override
-    public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
-        music.loop();
     }
 
     @Override
@@ -167,7 +169,9 @@ public class PlayState extends BasicGameState {
         for (Actor a : drawList) {
             if (player.canSeeLit(a.getPosZ(), a.getPosX(), a.getPosY())) {
                 a.draw();
-                g.drawString("" + a.getHitPoints(), tileSize * a.getPosX(), tileSize * a.getPosY());
+                if (showInfo) {
+                    g.drawString("" + a.getHitPoints(), tileSize * a.getPosX(), tileSize * a.getPosY());
+                }
                 if(debug) {
                     groundTiles.getSubImage(a.getImageCol(), a.getImageRow()).draw(tileSize * a.getPosX(), tileSize * a.getPosY());
                 }
@@ -191,7 +195,9 @@ public class PlayState extends BasicGameState {
         if (frameCount % 2 == 0) {
 
             if (player.isActive()) {
+                
                 player.updateAnim();
+                
             } else {
                 
             for (Actor a : world.actors) {
@@ -208,8 +214,64 @@ public class PlayState extends BasicGameState {
             }
                 world.freeReservedTiles();
             }
+            
+        }
+        
+        if(frameCount > 60) {
+            getInput(gc, sbg);
         }
 
+        
+    }
+
+    private void createWorld() {
+        world = new WorldBuilder(6, 80, 80)
+                .makeCaves()
+                .build();
+    }
+
+    public int getScrollX() {
+        return Math.max(0, Math.min(player.getPosX() - screenWidthTiles / 2, world.getWidth() - screenWidthTiles));
+    }
+
+    public int getScrollY() {
+        return Math.max(0, Math.min(player.getPosY() - screenHeightTiles / 2, world.getHeight() - screenHeightTiles));
+    }
+
+    public void updateActors() {
+        player.update();
+        player.setActive(true);
+        for (Actor a : world.actors) {           
+            a.setActive(true);
+        }
+    }
+
+    public boolean ifPlayerTurn() {
+        for (Actor a : world.actors) {
+            if (a.isActive()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public void renderInfo(Graphics g) {
+        g.setColor(Color.yellow);
+        g.drawString("Attack Value", (xOffset + 24) * tileSize, (yOffset + 1) * tileSize + tileSize/2);
+        g.drawString("Equipped Items", (xOffset + 28) * tileSize, (yOffset + 1) * tileSize + tileSize/2);
+        g.drawString("Defence Value", (xOffset + 24) * tileSize, (yOffset + 2) * tileSize + tileSize/2);
+        g.drawString("Hit Points", (xOffset + 24) * tileSize, (yOffset + 3) * tileSize + tileSize/2);
+        g.drawString("Food", (xOffset + 24) * tileSize, (yOffset + 4) * tileSize + tileSize/2);
+        g.drawString("Inventory", (xOffset + 24) * tileSize, (yOffset + 7) * tileSize + tileSize/2);
+        g.drawString("Examine", (xOffset + 24) * tileSize, (yOffset + 12) * tileSize + tileSize/2);
+        g.setColor(Color.white);
+    }
+
+    private void getInput(GameContainer gc, StateBasedGame sbg) {
+        if(player.isDead()) {
+                sbg.enterState(2);
+        }
+        
         if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
             System.exit(0);
         }
@@ -276,8 +338,15 @@ public class PlayState extends BasicGameState {
         }
         if (gc.getInput().isKeyPressed(Input.KEY_NUMPAD5) && ifPlayerTurn() && !player.isActive()) {
             gc.getInput().clearKeyPressedRecord();
-            //player.setState(0);
-            if (world.tile(player.getPosZ(), player.getPosX(), player.getPosY()) == Tile.STAIRSUP) {
+
+            if (player.getPosZ() == 0 && world.tile(player.getPosZ(), player.getPosX(), player.getPosY()) == Tile.STAIRSUP) {
+                if(player.getInventory().hasItem("Skeleton")) {
+                    sbg.enterState(4);
+                } else {
+                    sbg.enterState(3);
+                }
+            }
+            else if (world.tile(player.getPosZ(), player.getPosX(), player.getPosY()) == Tile.STAIRSUP) {
                 player.moveBy(-1, 0, 0);
                 world.getPlayer().message("player went upstairs");
             } else if (world.tile(player.getPosZ(), player.getPosX(), player.getPosY()) == Tile.STAIRSDOWN) {
@@ -325,11 +394,11 @@ public class PlayState extends BasicGameState {
             if (pickupItem != null) {
                 world.worldInventory.remove(pickupItem);
                 player.getInventory().add(pickupItem);
-                //world.update();
+                
                 world.getPlayer().message("played picked up ");
                 world.getPlayer().message(pickupItem.getName());
             }
-            //updateActors();
+            
         }
         if (gc.getInput().isKeyPressed(Input.KEY_D)) {
             player.drop();
@@ -350,48 +419,5 @@ public class PlayState extends BasicGameState {
             player.craft(craftItem);
             //updateActors();
         }
-    }
-
-    private void createWorld() {
-        world = new WorldBuilder(6, 80, 80)
-                .makeCaves()
-                .build();
-    }
-
-    public int getScrollX() {
-        return Math.max(0, Math.min(player.getPosX() - screenWidthTiles / 2, world.getWidth() - screenWidthTiles));
-    }
-
-    public int getScrollY() {
-        return Math.max(0, Math.min(player.getPosY() - screenHeightTiles / 2, world.getHeight() - screenHeightTiles));
-    }
-
-    public void updateActors() {
-        player.update();
-        player.setActive(true);
-        for (Actor a : world.actors) {           
-            a.setActive(true);
-        }
-    }
-
-    public boolean ifPlayerTurn() {
-        for (Actor a : world.actors) {
-            if (a.isActive()) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    public void renderInfo(Graphics g) {
-        g.setColor(Color.yellow);
-        g.drawString("Attack Value", (xOffset + 24) * tileSize, (yOffset + 1) * tileSize + tileSize/2);
-        g.drawString("Equipped Items", (xOffset + 28) * tileSize, (yOffset + 1) * tileSize + tileSize/2);
-        g.drawString("Defence Value", (xOffset + 24) * tileSize, (yOffset + 2) * tileSize + tileSize/2);
-        g.drawString("Hit Points", (xOffset + 24) * tileSize, (yOffset + 3) * tileSize + tileSize/2);
-        g.drawString("Food", (xOffset + 24) * tileSize, (yOffset + 4) * tileSize + tileSize/2);
-        g.drawString("Inventory", (xOffset + 24) * tileSize, (yOffset + 7) * tileSize + tileSize/2);
-        g.drawString("Examine", (xOffset + 24) * tileSize, (yOffset + 12) * tileSize + tileSize/2);
-        g.setColor(Color.white);
     }
 }

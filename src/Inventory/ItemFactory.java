@@ -17,10 +17,10 @@ import world.World;
  * @author Emmet
  */
 public class ItemFactory {
-    private World world;
+    //private World world;
 
-    public ItemFactory(World world) {
-        this.world = world;
+    public ItemFactory() {
+        //this.world = world;
     }
     
     public Armour newTunic() {
@@ -108,5 +108,10 @@ public class ItemFactory {
     public Food newCookedLizMeat() {
         Food clm = new Food("Cooked Meat", 43, 23, 40, "cooked meat +40 food;");
         return clm;
+    }
+    
+    public Item newManticoreRemains() {
+        Item mr = new Item("Skeleton", 16, 7, "Manticore Remains;");
+        return mr;
     }
 }

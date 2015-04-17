@@ -13,7 +13,7 @@ import util.Point;
  * @author Emmet
  */
 public class WanderMonsterAI extends AI {
-    Point target = null;
+    Player target = null;
     public WanderMonsterAI(Actor a) {
         super(a);
     }
@@ -21,6 +21,7 @@ public class WanderMonsterAI extends AI {
     @Override
     public void onUpdate() { 
         a.update();
+        
         if(a.getHitPoints() > 0) {
             wander();
         } else {
@@ -48,10 +49,10 @@ public class WanderMonsterAI extends AI {
         } while (x == 0 && y == 0);
         
 
-        if(a.canEnter(a.getPosZ(), a.getPosX() + x, a.getPosY() + y)) {
+        //if(a.canEnter(a.getPosZ(), a.getPosX() + x, a.getPosY() + y)) {
             a.moveBy(0, x, y);
-        } else {
-            a.moveBy(0, 0, 0);
-        }
+        //} else {
+            //a.moveBy(0, 0, 0);
+        //}
     }
 }

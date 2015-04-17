@@ -29,6 +29,7 @@ public class Player extends Actor {
     List<String> messages;
     boolean showCraft;
     private int craftX, craftY;
+    private boolean dead = false;
     
 
     public Player(String type, World w, int ic, int ir, int av, int dv, int hp, int vr) throws SlickException {
@@ -255,7 +256,9 @@ public class Player extends Actor {
     
     public void message(String m) {
         messages.add(m);
-        while(messages.size() > 10) messages.remove(0);
+        while(messages.size() > 10) {
+            messages.remove(0);
+        }
     }
     
     public void setShowCraft(boolean sc) {
@@ -287,7 +290,34 @@ public class Player extends Actor {
     }
     
     @Override
+    public void die() {
+        drop();
+        dead = true;
+        //world.actors.remove(this);
+    }
+    
+    @Override
+    public boolean isDead() {
+        return dead;
+    }
+    
+    
+    
+    @Override
     public void update() {
         super.update();
+    }
+    
+    @Override
+    public void attack(Actor target) {
+        int dmg = Math.max(0, getAV() - target.getDV());
+        dmg = (int) (Math.random() * dmg + 1);
+        message(super.getType() + " attacks " + target.getType());
+        message(" for " + dmg + " damage");
+        
+        target.modHP(-dmg);
+        if(target.getAI().getClass().equals(WanderMonsterAI.class) ) {
+            target.setAI(new HuntingMonsterAI(target, this));
+        }
     }
 }

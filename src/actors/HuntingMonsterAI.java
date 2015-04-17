@@ -23,7 +23,7 @@ public class HuntingMonsterAI extends AI {
 
     @Override
     public void onUpdate() {
-        a.update();
+        a.update();  
         if (a.getHitPoints() > 0) {
             if (a.canSeeDim(target.getPosZ(), target.getPosX(), target.getPosY())) {
                 hunt(target);
@@ -41,24 +41,24 @@ public class HuntingMonsterAI extends AI {
 
         int mx = points.get(0).x - a.getPosX();
         int my = points.get(0).y - a.getPosY();
-        
+        if((mx == 0 && my == 0) || (!a.canDrawPath(a.getPosZ(), a.getPosX() + mx, a.getPosY() + my))) {
+            a.moveBy(0, (int)(Math.random() * 3) -1, (int)(Math.random() * 3) -1);
+        }     
         a.moveBy(0, mx, my);
     }
     
     @Override
     public void wander() {
+        int i = 0;
         int x = (int) (Math.random() * 3) -1;
         int y = (int) (Math.random() * 3) -1;
         do {
+           i++;
            x = (int) (Math.random() * 3) -1;
            y = (int) (Math.random() * 3) -1;
-        } while (x == 0 && y == 0);
+        } while (!a.canEnter(a.getPosZ(), a.getPosX() + x, a.getPosY() + y) && i < 8);
         
-
-        if(a.canEnter(a.getPosZ(), a.getPosX() + x, a.getPosY() + y)) {
-            a.moveBy(0, x, y);
-        } else {
-            a.moveBy(0, 0, 0);
-        }
+        a.moveBy(0, x, y);
+ 
     }
 }
