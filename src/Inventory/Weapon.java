@@ -1,13 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package inventory;
 
-/**
- *
- * @author Emmet
+/*
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: Weapon.java
+ * 
+ * Class that extends Item, includes a modifier to Entities Damage
  */
+
 public class Weapon extends Item {
     private int attMod;
     

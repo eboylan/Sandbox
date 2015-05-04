@@ -1,6 +1,10 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan and http://trystans.blogspot.ie/ 
+ * Project: Sandbox Warrior
+ * File: Line.java
+ * 
+ * Class to define and support Lines
+ * Based on implementation from http://trystans.blogspot.ie/
  */
 package util;
 
@@ -8,10 +12,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- *
- * @author Emmet
- */
 public class Line implements Iterable {
     private List<Point> points;
     public List<Point> getPoints() { return points; }

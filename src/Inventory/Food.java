@@ -1,13 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package inventory;
-
 /**
- *
- * @author Emmet
- */
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: Food.java
+ * 
+ * Extension of Item class that includes a food value
+ **/
 public class Food extends Item{
     
     private int foodValue;

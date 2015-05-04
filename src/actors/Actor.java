@@ -1,14 +1,16 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan and http://trystans.blogspot.ie/ 
+ * Project: Sandbox Warrior
+ * File: Actor.java
+ * 
+ * Class to define the basic Game Entity, the Actor
+ * Based on and expanded from implementation from http://trystans.blogspot.ie/
  */
 package actors;
 
 
-//import entityEffects.*;
 import actorEffects.Effect;
 import actors.states.ActorState;
-import actors.states.DeathState;
 import inventory.Armour;
 import inventory.Inventory;
 import inventory.Item;
@@ -19,11 +21,6 @@ import util.Point;
 import world.Tile;
 import world.World;
 
-
-/**
- *
- * @author Emmet
- */
 public class Actor {
     //name
     private String type;
@@ -234,9 +231,9 @@ public class Actor {
             world.getPlayer().message(" for " + dmg + " damage");
         }
         target.modHP(-dmg);
-        /*if(target.getAI().getClass().equals(WanderMonsterAI.class) ) {
+        if(target.getAI().getClass().equals(WanderMonsterAI.class) ) {
             target.setAI(new HuntingMonsterAI(target, this));
-        }*/
+        }
     }
 
     public void setFacing(int facing) {
@@ -403,5 +400,17 @@ public class Actor {
                getWorld().worldInventory.add(dropItem);
             }
         }
+    }
+    
+    public int getAnimXoffset() {
+        return actState.getAnimXoffset();
+    }
+    
+    public int getAnimYoffset() {
+        return actState.getAnimYoffset();
+    }
+    
+    public void message(String m) {
+        
     }
 }

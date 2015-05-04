@@ -1,26 +1,32 @@
 package inventory;
 
+import actorEffects.Effect;
 import actorEffects.ModAttack;
 import actorEffects.ModDef;
 import actorEffects.ModHP;
-import inventory.Armour;
-import inventory.Weapon;
-import world.World;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: ItemFactory.java
+ * 
+ * Factory class to generate Item objects
  */
 
-/**
- *
- * @author Emmet
- */
 public class ItemFactory {
-    //private World world;
+    ArrayList<Effect> potionEffects;
 
     public ItemFactory() {
-        //this.world = world;
+        potionEffects = new ArrayList<>();
+        potionEffects.add(new ModAttack(null, 10, 2));
+        potionEffects.add(new ModDef(null, 10, 2));
+        potionEffects.add(new ModHP(null, -1, 2));
+        potionEffects.add(new ModAttack(null, 10, -2));
+        potionEffects.add(new ModDef(null, 10, -2));
+        potionEffects.add(new ModHP(null, -1, -2));
+        Collections.shuffle(potionEffects);
     }
     
     public Armour newTunic() {
@@ -76,17 +82,17 @@ public class ItemFactory {
     
     
     public Potion newBlackPotion() {
-        Potion bp = new Potion("Black Potion", 28, 24, new ModAttack(null, 10, 2), "Strange black liquid");
+        Potion bp = new Potion("Black Potion", 28, 24, potionEffects.get(0), "Strange black liquid");
         return bp;
     }
     
     public Potion newBluePotion() {
-        Potion bp = new Potion("Blue Potion", 29, 24, new ModDef(null, 10, 2), "Strange blue liquid");
+        Potion bp = new Potion("Blue Potion", 29, 24, potionEffects.get(1), "Strange blue liquid");
         return bp;
     }
     
     public Potion newBrownPotion() {
-        Potion bp = new Potion("Brown Potion", 30, 24, new ModHP(null, -1, 2), "Strange brown liquid");
+        Potion bp = new Potion("Brown Potion", 30, 24, potionEffects.get(2), "Strange brown liquid");
         return bp;
     }
     

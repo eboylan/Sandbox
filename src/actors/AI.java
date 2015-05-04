@@ -1,3 +1,11 @@
+/*
+ * Author: Emmet Boylan and http://trystans.blogspot.ie/ 
+ * Project: Sandbox Warrior
+ * File: AI.java
+ * 
+ * Class to define and support AI behaviour
+ * Based on and expanded from implementation from http://trystans.blogspot.ie/
+ */
 package actors;
 
 import java.util.Iterator;

@@ -1,6 +1,10 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan and http://trystans.blogspot.ie/ 
+ * Project: Sandbox Warrior
+ * File: Player.java
+ * 
+ * Class extends Actor to allow for Player differences such as UI and crafting items
+ * Includes action (attack, drop, equip, use, getVisionRadius)code from http://trystans.blogspot.ie/
  */
 package actors;
 
@@ -42,7 +46,7 @@ public class Player extends Actor {
         showCraft = false;
     }
 
-    public void playerUI(Graphics g, int z, int xOffset, int yOffset, SpriteSheet groundTiles, int tileSize, int screenWidthTiles, int screenHeightTiles) {
+    public void playerUI(Graphics g, int xOffset, int yOffset, SpriteSheet groundTiles, int tileSize, int screenWidthTiles, int screenHeightTiles) {
         for (int x = xOffset + screenWidthTiles; x < xOffset + screenWidthTiles + 9; x++) {
             for (int y = yOffset; y < yOffset + screenHeightTiles; y++) {
                 groundTiles.getSubImage(Icon.UIBORDER.getImageCol(), Icon.UIBORDER.getImageRow()).draw(x * tileSize, y * tileSize);
@@ -240,10 +244,10 @@ public class Player extends Actor {
             if (useItem != null && useItem.getClass().equals(Potion.class)) {
                 super.getInventory().remove(useItem);
                 Potion p = (Potion) useItem;
-                super.addEffect(p.getEffect());
-                p.getEffect().setActor(this); 
+                super.addEffect(p.getEffect()); 
                 message("player used "); 
                 message(useItem.getName());
+                p.getEffect().setActor(this);
             } else if (useItem != null && useItem.getClass().equals(Food.class)) {
                 super.getInventory().remove(useItem);
                 Food f = (Food) useItem;
@@ -254,6 +258,7 @@ public class Player extends Actor {
         
     }
     
+    @Override
     public void message(String m) {
         messages.add(m);
         while(messages.size() > 10) {

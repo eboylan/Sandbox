@@ -1,14 +1,14 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: http://trystans.blogspot.ie/
+ * Project: Sandbox Warrior
+ * File: Pathfinder.java
+ * 
+ * Class to define and support Pathfinding
+ * Based on A* algorithm
+ * Based on implementation from http://trystans.blogspot.ie/
  */
 package util;
 
-/**
- *
- * @author Emmet
- */
-//import entities.Actor;
 import actors.Actor;
 import java.util.ArrayList;
 import java.util.Collections;

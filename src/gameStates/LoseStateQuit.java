@@ -1,6 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: LoseStateQuit.java
+ * 
+ * Simply displays User message upon quitting
  */
 package gameStates;
 
@@ -11,10 +14,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-/**
- *
- * @author Emmet
- */
 public class LoseStateQuit extends BasicGameState{
 
     @Override

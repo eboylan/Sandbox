@@ -1,14 +1,13 @@
 package inventory;
-
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: Armour.java
+ * 
+ * Extension of Item class that modifies Defence of Entities
+ * 
  */
 
-/**
- *
- * @author Emmet
- */
 public class Armour extends Item {
     private int defMod;
     

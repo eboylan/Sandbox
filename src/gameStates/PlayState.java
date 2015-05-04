@@ -1,6 +1,11 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: PlayState.java
+ * 
+ * Main driver of game. Handles input, rendering, GUI,
+ * calls world builder and calls Item and Actor creation
+ * Handles turn loop and calls update and animations from entities
  */
 package gameStates;
 
@@ -76,7 +81,6 @@ public class PlayState extends BasicGameState {
         music.loop();
         createWorld();
         
-        //itemFactory = new ItemFactory(world);
         itemFactory = new ItemFactory();
         
         actFactory = new ActorFactory(world, itemFactory);
@@ -162,7 +166,7 @@ public class PlayState extends BasicGameState {
             }
         }
 
-        player.playerUI(g, xOffset, xOffset, yOffset, groundTiles, tileSize, screenWidthTiles, screenHeightTiles);
+        player.playerUI(g, xOffset, yOffset, groundTiles, tileSize, screenWidthTiles, screenHeightTiles);
         groundTiles.endUse();
         CopyOnWriteArrayList<Actor> drawList = world.actors;
         Collections.reverse(drawList);
@@ -225,7 +229,10 @@ public class PlayState extends BasicGameState {
     }
 
     private void createWorld() {
-        world = new WorldBuilder(6, 80, 80)
+        int depth = (int)(Math.random() * 5) + 3;
+        int width = (int) ((Math.random() * 5) + 5 ) * 10;
+        int height = (int) ((Math.random() * 5) + 5 ) * 10;
+        world = new WorldBuilder(depth, width, height)
                 .makeCaves()
                 .build();
     }
@@ -274,10 +281,6 @@ public class PlayState extends BasicGameState {
         
         if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
             System.exit(0);
-        }
-
-        if (gc.getInput().isKeyPressed(Input.KEY_ENTER) && !player.isActive()) {
-            updateActors();
         }
 
         if (gc.getInput().isKeyDown(Input.KEY_NUMPAD6) && ifPlayerTurn() && !player.isActive()) {
@@ -402,22 +405,18 @@ public class PlayState extends BasicGameState {
         }
         if (gc.getInput().isKeyPressed(Input.KEY_D)) {
             player.drop();
-            //updateActors();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_E)) {
             player.equip();
-            //updateActors();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_U)) {
             player.use();
-            //updateActors();
         }
         if (gc.getInput().isKeyPressed(Input.KEY_I)) {
             showInfo = !showInfo;
         }
         if (gc.getInput().isKeyPressed(Input.KEY_C)) {
             player.craft(craftItem);
-            //updateActors();
         }
     }
 }

@@ -1,6 +1,11 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan and http://trystans.blogspot.ie/ 
+ * Project: Sandbox Warrior
+ * File: MyconoidAI.java
+ * 
+ * Class to define and support AI behaviour of static, spawning Entities
+ * Based on and expanded from implementation from http://trystans.blogspot.ie/
+ * Dropped from latest implementation, kept for later reintroduction
  */
 package actors;
 

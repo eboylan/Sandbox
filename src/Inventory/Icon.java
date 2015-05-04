@@ -1,13 +1,11 @@
 package inventory;
-
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: Icon.java
+ * 
+ * An enumeration of Icons to provide locations of graphic tiles to GUI
 
-/**
- *
- * @author Emmet
  */
 public enum Icon {
     ATTACK(8, 1),
@@ -30,16 +28,10 @@ public enum Icon {
         this.imageCol = c;      
     }
 
-    /**
-     * @return the imageRow
-     */
     public int getImageRow() {
         return imageRow;
     }
 
-    /**
-     * @return the imageCol
-     */
     public int getImageCol() {
         return imageCol;
     }

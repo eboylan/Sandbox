@@ -1,14 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package world;
 
-/**
- *
- * @author Emmet
+/*
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: Tile.java
+ * 
+ * Enum defining Tiles attributes
  */
-
 public enum Tile {
     FLOOR(12, 17, true, 8),
     WALL(8, 16, false, 8),

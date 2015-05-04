@@ -1,14 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package actorEffects;
 
 import actors.Actor;
-
-/**
- *
- * @author Emmet
+/*
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: Effect.java
+ * 
+ * Interface for Effect classes
  */
 public interface Effect {
     public void update();

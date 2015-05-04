@@ -1,4 +1,12 @@
 package util;
+/*
+ * Author: http://trystans.blogspot.ie/ modified by Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: Point.java
+ * 
+ * Class to define and support Points
+ * Based on implementation from http://trystans.blogspot.ie/
+ */
 
 import java.util.ArrayList;
 import java.util.Collections;

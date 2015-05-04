@@ -1,15 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package inventory;
 
-import actors.Actor;
 import actorEffects.Effect;
 
-/**
- *
- * @author Emmet
+/*
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: Potion.java
+ * 
+ * Class that defines Potion objects and stores their Effect
  */
 public class Potion extends Item {
     private Effect effect;

@@ -1,6 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: ModHP.java
+ * 
+ * Class that handles Effects that modify Hit Point variable
  */
 package actorEffects;
 
@@ -28,7 +31,12 @@ public class ModHP implements Effect{
             
         }
         else if (a.getFCount() > duration) {
-           a.effectHP(-mod); 
+           a.effectHP(-mod);
+           if(mod > 0) {
+                a.message("Hitpoints lowered by " + mod);
+           } else {
+               a.message("Hitpoints increased by " + -(mod));
+           }
            a.removeEffect(this);
         }
     }
@@ -37,6 +45,11 @@ public class ModHP implements Effect{
     public void setActor(Actor a) {
         this.a = a;
         a.effectHP(mod);
+        if(mod > 0) {
+                a.message("Hitpoints increased by " + mod);
+           } else {
+               a.message("Hitpoints lowered by " + mod);
+           }
         if (duration > 0) {
             this.duration += a.getFCount();
         }

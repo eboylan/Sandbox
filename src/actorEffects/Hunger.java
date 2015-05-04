@@ -1,14 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package actorEffects;
 
 import actors.Actor;
 
-/**
- *
- * @author Emmet
+/*
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: Hunger.java
+ * 
+ * Effect class that reduces health if food variable falls below threshold
  */
 public class Hunger implements Effect{
     private Actor a;
@@ -32,6 +32,7 @@ public class Hunger implements Effect{
             }
             if(a.getFood() < 1) {
                 a.modHP(-1);
+                a.message("Lost health due to hunger");
             }           
         }       
     }

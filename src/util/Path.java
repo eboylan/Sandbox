@@ -1,6 +1,10 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: http://trystans.blogspot.ie/ modified by Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: Line.java
+ * 
+ * Class to define and support Paths
+ * Based on implementation from http://trystans.blogspot.ie/
  */
 package util;
 
@@ -8,10 +12,7 @@ package util;
 import actors.Actor;
 import java.util.List;
 
-/**
- *
- * @author Emmet
- */
+
 public class Path {
 
   private static Pathfinder pf = new Pathfinder();

@@ -1,19 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: http://trystans.blogspot.ie/ modified by Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: WorldBuilder.java
+ * 
+ * Class to define and support building of worlds
+ * Based on implementation from http://trystans.blogspot.ie/
  */
 package world;
 
-//import entities.BaseEntity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import util.Point;
 
-/**
- *
- * @author Emmet
- */
 public class WorldBuilder {
 
     private int depth;
@@ -56,7 +55,7 @@ public class WorldBuilder {
                     for (int y = 0; y < height; y++) {
 
                         int floors = 0;
-                        int rocks = 0;
+                        int walls = 0;
 
                         for (int ox = -1; ox < 2; ox++) {
                             for (int oy = -1; oy < 2; oy++) {
@@ -68,11 +67,11 @@ public class WorldBuilder {
                                 if (tiles[z][x + ox][y + oy] == Tile.FLOOR) {
                                     floors++;
                                 } else {
-                                    rocks++;
+                                    walls++;
                                 }
                             }
                         }
-                            tiles2[z][x][y] = floors >= rocks || rocks <= 1 ? Tile.FLOOR : Tile.WALL;
+                            tiles2[z][x][y] = floors >= walls || walls <= 1 ? Tile.FLOOR : Tile.WALL;
                         }
                     }
                 }
@@ -91,7 +90,7 @@ public class WorldBuilder {
                     for (int y = 0; y < height; y++) {
 
                         int floors = 0;
-                        int rocks = 0;
+                        int walls = 0;
 
                         for (int ox = -1; ox < 2; ox++) {
                             for (int oy = -1; oy < 2; oy++) {
@@ -103,11 +102,11 @@ public class WorldBuilder {
                                 if (tiles[z][x + ox][y + oy] == Tile.FLOOR) {
                                     floors++;
                                 } else {
-                                    rocks++;
+                                    walls++;
                                 }
                             }
                         }
-                            tiles2[z][x][y] = floors >= rocks ? Tile.FLOOR : Tile.WALL;
+                            tiles2[z][x][y] = floors >= walls ? Tile.FLOOR : Tile.WALL;
                         }
                     }
                 }
@@ -117,7 +116,7 @@ public class WorldBuilder {
         }
  
     public WorldBuilder makeCaves() {
-        return randomizeTiles().initSmooth(2).smooth(2).createRegions().connectRegions();
+        return randomizeTiles().initSmooth((int)Math.random()*3 + 2).smooth((int)Math.random()*3 + 1).createRegions().connectRegions();
     }
 
     private WorldBuilder createRegions() {

@@ -1,15 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: http://trystans.blogspot.ie/ modified by Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: World.java
+ * 
+ * Class to define and support coolection of Tiles called World
+ * Based on implementation from http://trystans.blogspot.ie/
  */
 package world;
 
-import inventory.Item;
 import actors.Actor;
 import actors.Player;
-import actors.Actor;
+import inventory.Item;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +19,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import util.Point;
 
 
-/**
- *
- * @author Emmet
- */
 public class World {
 
     private Tile[][][] tiles;

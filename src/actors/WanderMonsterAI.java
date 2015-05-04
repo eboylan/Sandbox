@@ -1,6 +1,10 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan and http://trystans.blogspot.ie/ 
+ * Project: Sandbox Warrior
+ * File: WanderMonsterAI.java
+ * 
+ * Class to define and support wandering monster AI behaviour
+ * Based on and expanded from implementation from http://trystans.blogspot.ie/
  */
 package actors;
 
@@ -49,10 +53,7 @@ public class WanderMonsterAI extends AI {
         } while (x == 0 && y == 0);
         
 
-        //if(a.canEnter(a.getPosZ(), a.getPosX() + x, a.getPosY() + y)) {
             a.moveBy(0, x, y);
-        //} else {
-            //a.moveBy(0, 0, 0);
-        //}
+
     }
 }

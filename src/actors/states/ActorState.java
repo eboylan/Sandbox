@@ -1,15 +1,14 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: AI.java
+ * 
+ * Interface for Actor State classes
  */
 package actors.states;
 
 import actors.Actor;
 
-/**
- *
- * @author Emmet
- */
 public interface ActorState {
     void draw();
     
@@ -20,4 +19,8 @@ public interface ActorState {
     int getAnimFCount();
 
     public void setTarget(Actor target);
+    
+    int getAnimXoffset();
+    
+    int getAnimYoffset();
 }

@@ -1,13 +1,11 @@
 package inventory;
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author Emmet
+ * Author: Emmet Boylan 
+ * Project: Sandbox Warrior
+ * File: Item.java
+ * 
+ * Class defining attributes of Item
  */
 public class Item {
     private String name;
@@ -25,44 +23,26 @@ public class Item {
         this.description = description;
     }
 
-    /**
-     * @return the name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @return the imageCol
-     */
     public int getImageCol() {
         return imageCol;
     }
 
-    /**
-     * @return the imageRow
-     */
     public int getImageRow() {
         return imageRow;
     }
 
-    /**
-     * @return the posX
-     */
     public int getPosX() {
         return posX;
     }
 
-    /**
-     * @return the posY
-     */
     public int getPosY() {
         return posY;
     }
 
-    /**
-     * @return the posZ
-     */
     public int getPosZ() {
         return posZ;
     }
@@ -73,9 +53,6 @@ public class Item {
         this.posY = y;
     }
 
-    /**
-     * @return the desription
-     */
     public String getDesription() {
         return description;
     }

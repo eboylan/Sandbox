@@ -1,17 +1,16 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: AttackState.java
+ * 
+ * Handles drawing animations for entity based on current state
+ * Changes state on termination
  */
 package actors.states;
 
 import actors.Actor;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-/**
- *
- * @author Emmet
- */
 public class AttackState implements ActorState{
     Actor actor;
     SpriteSheet sprites;
@@ -65,5 +64,15 @@ public class AttackState implements ActorState{
     @Override
     public void setTarget(Actor target) {
         this.target = target;
+    }
+
+    @Override
+    public int getAnimXoffset() {
+        return animXoffset;
+    }
+
+    @Override
+    public int getAnimYoffset() {
+        return animYoffset;
     }
 }

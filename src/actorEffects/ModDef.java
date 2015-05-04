@@ -1,21 +1,20 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: DefAttack.java
+ * 
+ * Class that handles Effects that modify Defence variable
  */
 package actorEffects;
 
 import actors.Actor;
 
-/**
- *
- * @author Emmet
- */
 public class ModDef implements Effect{
     private Actor a;
     private long duration;
     private int mod;
     
-    public ModDef(Actor be, long l, int i) {
+    public ModDef(Actor a, long l, int i) {
         this.a = a;
         this.duration = l;
         this.mod = i;
@@ -28,7 +27,12 @@ public class ModDef implements Effect{
             
         }
         else if (a.getFCount() > duration) {
-           a.effectDefence(-mod); 
+           a.effectDefence(-mod);
+           if(mod > 0) {
+                a.message("Defence lowered by " + mod);
+           } else {
+               a.message("Defence increased by " + -(mod));
+           }
            a.removeEffect(this);
         }
     }
@@ -37,6 +41,11 @@ public class ModDef implements Effect{
     public void setActor(Actor a) {
         this.a = a;
         a.effectDefence(mod);
+        if(mod > 0) {
+                a.message("Defence increased by " + mod);
+           } else {
+               a.message("Defence lowered by " + mod);
+           }
         if (duration > 0) {
             this.duration += a.getFCount();
         }

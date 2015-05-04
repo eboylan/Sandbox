@@ -1,12 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package inventory;
 
-/**
- *
- * @author Emmet
+/*
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: CraftItem.java
+ * 
+ * Implements code to support crafting of items by creating
+ * new items based on ingredients.
+ * 
  */
 public class CraftItem {
     private final ItemFactory itemFactory;

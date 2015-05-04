@@ -1,12 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package inventory;
 
-/**
- *
- * @author Emmet
+/*
+ * Author: Emmet Boylan and http://trystans.blogspot.ie/ 
+ * Project: Sandbox Warrior
+ * File: Inventory.java
+ * 
+ * Class to define and support Item inventory
+ * Based on implementation from http://trystans.blogspot.ie/
  */
 public class Inventory {
 
@@ -58,7 +58,7 @@ public class Inventory {
     
     public boolean hasItem(String item) {
         for (int i = 0; i < inventory.length; i++) {
-            if (inventory[i].getName() == item) {
+            if (inventory[i] == null ? item == null : inventory[i].getName().equals(item)) {
                 return true;
             }
         }

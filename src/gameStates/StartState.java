@@ -1,6 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: StartState.java
+ * 
+ * introduction Screen to Game
  */
 package gameStates;
 
@@ -40,8 +43,16 @@ public class StartState extends BasicGameState {
         
         bGround.getSubImage(10, 10, 800, 800).draw(112, 0);
         g.setColor(Color.white);
-        g.drawString("    Start State", 200, 100);
-        g.drawString("Press Enter to Start", 200, 130);
+        g.drawString("Welcome brave traveller", 200, 100);
+        g.drawString(" Press Enter to Start", 200, 130);
+        
+        g.drawString("You have tracked the evil Manticore back to it's lair", 200, 430);
+        g.drawString("You must now slay it and bring back it's corpse", 200, 460);
+        g.drawString("Search the dungeon for items and potions that may help", 200, 490);
+        g.drawString("But beware, a potion is a fickle thing and may harm", 200, 520);
+        g.drawString("rather than help. To taste is the only way to discover", 200, 550);
+        g.drawString("Beware also the Manticore Goblin minions", 200, 580);
+        g.drawString("Good luck. You will need it", 200, 610);
     }
 
     @Override

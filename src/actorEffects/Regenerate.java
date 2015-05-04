@@ -1,15 +1,15 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: DefAttack.java
+ * 
+ * Class that handles regeneration of health over time, if food is above
+ * threshold level
  */
 package actorEffects;
 
 import actors.Actor;
 
-/**
- *
- * @author Emmet
- */
 public class Regenerate implements Effect{
     private Actor a;
     private long duration;
@@ -28,6 +28,7 @@ public class Regenerate implements Effect{
         }
         if(a.getFCount() % 100 == 0 && a.getFood() > 20) {
              a.modHP(1);
+             a.message("Health recovered");
         }       
     }
     

@@ -1,6 +1,10 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Emmet Boylan
+ * Project: Sandbox Warrior
+ * File: RunState.java
+ * 
+ * Handles drawing animations for entity based on current state
+ * Changes state on termination
  */
 package actors.states;
 
@@ -9,10 +13,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 import world.Tile;
 
-/**
- *
- * @author Emmet
- */
 public class RunState implements ActorState{
     Actor actor;
     SpriteSheet sprites;
@@ -70,5 +70,15 @@ public class RunState implements ActorState{
     @Override
     public void setTarget(Actor target) {
         //
+    }
+
+    @Override
+    public int getAnimXoffset() {
+        return 0;
+    }
+
+    @Override
+    public int getAnimYoffset() {
+        return 0;
     }
 }
