@@ -119,7 +119,8 @@ public class Player extends Actor {
         if (super.getInventory().get(5 * selectY + selectX) != null) {
             g.drawString("" + super.getInventory().get(5 * selectY + selectX).getName(), (xOffset + 24) * tileSize, (yOffset + 13) * tileSize);
             g.drawString("" + super.getInventory().get(5 * selectY + selectX).getDesription(), (xOffset + 24) * tileSize, (yOffset + 14) * tileSize);
-            if (super.getInventory().get(5 * selectY + selectX).getClass().equals(Potion.class)) {
+            if (super.getInventory().get(5 * selectY + selectX).getClass().equals(Potion.class)
+                    ||super.getInventory().get(5 * selectY + selectX).getClass().equals(Food.class)) {
                 g.drawString("(U)se or (D)rop", (xOffset + 24) * tileSize, (yOffset + 14) * tileSize + tileSize/2);
             } else {
                 g.drawString("(E)quip or (D)rop", (xOffset + 24) * tileSize, (yOffset + 14) * tileSize + tileSize/2);
@@ -208,11 +209,10 @@ public class Player extends Actor {
     @Override
     public void drop() {
         Item dropItem = super.getInventory().get((selectY * 5) + selectX);
-        if (dropItem != null && super.getWorld().isItemAt(super.getPosZ(), super.getPosX(), super.getPosY()) == null) {
+        if (dropItem != null) {
             dropItem.setPos(super.getPosZ(), super.getPosX(), super.getPosY());
             super.getWorld().worldInventory.add(dropItem);
             super.getInventory().remove(dropItem);
-            //super.getWorld().update();//replace with updateActors
             message("player dropped ");
             message(dropItem.getName());
         }

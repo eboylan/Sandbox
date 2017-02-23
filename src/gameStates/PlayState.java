@@ -88,7 +88,7 @@ public class PlayState extends BasicGameState {
         craftItem = new CraftItem(itemFactory);
         
         for (int i = 0; i < world.getDepth(); i++) {
-            for (int j = 0; j < 8 + i; j++) {
+            for (int j = 0; j < world.getWidth() / 10; j++) {
                 actFactory.newLizard(i);
             }
         }
@@ -100,27 +100,21 @@ public class PlayState extends BasicGameState {
         }
         world.actors.remove(player);
         world.setPlayerRef(player);
-        
-        
+           
         actFactory.newManticore(world.getDepth() - 1, player);
 
         world.addDungeonExit(player.getPos());
 
         for (int i = 0; i < world.getDepth(); i++) {
-            world.putItemInClearTile(itemFactory.newTorch(), i);
-            world.putItemInClearTile(itemFactory.newTorch(), i);
-            world.putItemInClearTile(itemFactory.newTorch(), i);
-            world.putItemInClearTile(itemFactory.newTorch(), i);
-            world.putItemInClearTile(itemFactory.newRandomPotion(), i);
-            world.putItemInClearTile(itemFactory.newRandomPotion(), i);
-            world.putItemInClearTile(itemFactory.newRandomPotion(), i);
-            world.putItemInClearTile(itemFactory.newRandomPotion(), i);
-            world.putItemInClearTile(itemFactory.newRandomPotion(), i);
-            world.putItemInClearTile(itemFactory.newRandomPotion(), i);
-            world.putItemInClearTile(itemFactory.newRandomPotion(), i);
-            world.putItemInClearTile(itemFactory.newRandomPotion(), i);
-            world.putItemInClearTile(itemFactory.newRandomPotion(), i);
-            world.putItemInClearTile(itemFactory.newRandomPotion(), i);
+            for (int numTorch = 0; numTorch < 5; numTorch++) {
+                world.putItemInClearTile(itemFactory.newTorch(), i);
+            }
+            for (int numPotion = 0; numPotion < 10; numPotion++) {
+                world.putItemInClearTile(itemFactory.newRandomPotion(), i);
+            }
+            for (int numWpn = 0; numWpn < 5; numWpn++) {
+                world.putItemInClearTile(itemFactory.newRandomWeapon(), i);
+            }
             if (Math.random() < i / 2f) {
                 world.putItemInClearTile(itemFactory.newLeatherArmour(), i);
             }

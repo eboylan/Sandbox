@@ -51,7 +51,7 @@ public class ActorFactory {
     }
     
     public Player newPlayer() throws SlickException {
-        Player player = new Player("player", world, 4, 2, 6, 2, 12, 6);
+        Player player = new Player("player", world, 4, 2, 6, 3, 16, 6);
         world.putInClearTile(player, 0);
         player.setAI(new AI(player));
         player.addState(0, new IdleState(player, playerIdleSheet, 30, -62, -64));
@@ -61,9 +61,12 @@ public class ActorFactory {
         player.addState(4, new RunState(player, playerRunSheet, 15, -56, -100));
         player.addState(5, new DeathState(player, playerDeathSheet, 15, -62, -54));
         player.setState(0);
-        player.setEquipedArmour(itemFactory.newTunic());
-        player.setEquipedWeapon(itemFactory.newDagger());
+        player.setEquipedArmour(itemFactory.newChainArmour());
+        player.setEquipedWeapon(itemFactory.newSword());
         player.setOffHand(itemFactory.newTorch());
+        player.inventoryAdd(itemFactory.newShield());
+        player.inventoryAdd(itemFactory.newBread());
+        player.inventoryAdd(itemFactory.newBread());
         player.addEffect(new Hunger(player, -1));
         player.addEffect(new Regenerate(player, -1));
         return player;

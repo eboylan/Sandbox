@@ -169,8 +169,13 @@ public class ItemFactory {
     }
     
     public Food newLizMeat() {
-        Food q = new Food("Lizard Meat", 36, 23, 20, "lizard meat +20 food");
-        return q;
+        Food l = new Food("Lizard Meat", 36, 23, 20, "lizard meat +20 food");
+        return l;
+    }
+    
+    public Food newBread() {
+        Food b = new Food("Bread(gluten)", 33, 23, 15, "bread +15 food");
+        return b;
     }
     
     public Food newCookedQuorn() {
